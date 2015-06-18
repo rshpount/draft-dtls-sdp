@@ -4,20 +4,18 @@
 Network Working Group                                        C. Holmberg
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                              R. Shpount
-Expires: December 17, 2015                                   TurboBridge
-                                                           June 15, 2015
+Expires: December 20, 2015                                   TurboBridge
+                                                           June 18, 2015
 
 
-  DTLS Association Establishment Using the SDP Offer/Answer Mechanism
-                 draft-holmberg-mmusic-sdp-dtls-00.txt
+             Using the SDP Offer/Answer Mechanism for DTLS
+                 draft-holmberg-mmusic-sdp-dtls-01.txt
 
 Abstract
 
-   This draft defines the criteria for when a DTLS association needs to
-   be established/re-established, based on an SDP offer/answer
-   transaction.  The draft also defines how the SDP 'connection'
-   attribute is used with DTLS to signal to the remote peer whether a
-   new DTLS association needs to established/re-established.
+   This draft defines the SDP offer/answer procedures for negotiating
+   and establishing a DTLS association.  The draft also defines the
+   criteria for when a new DTLS association must be established.
 
 Status of This Memo
 
@@ -34,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 17, 2015.
+   This Internet-Draft will expire on December 20, 2015.
 
 Copyright Notice
 
@@ -48,146 +46,109 @@ Copyright Notice
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
-
-
-
-
-Holmberg & Shpount      Expires December 17, 2015               [Page 1]
-
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
-
-
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
+
+
+
+
+Holmberg & Shpount      Expires December 20, 2015               [Page 1]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
+
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   4.  DTLS Association Re-Establishment Criteria  . . . . . . . . .   3
-     4.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     4.2.  Change of DTLS Role . . . . . . . . . . . . . . . . . . .   3
-     4.3.  Change of Fingerprint . . . . . . . . . . . . . . . . . .   3
-     4.4.  ICE Considerations  . . . . . . . . . . . . . . . . . . .   3
-     4.5.  SIP Considerations  . . . . . . . . . . . . . . . . . . .   4
+   2.  Establishing a new DTLS Association . . . . . . . . . . . . .   3
+     2.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.2.  ICE Considerations  . . . . . . . . . . . . . . . . . . .   3
+     2.3.  SIP Considerations  . . . . . . . . . . . . . . . . . . .   3
+   3.  Abbreviations . . . . . . . . . . . . . . . . . . . . . . . .   4
+   4.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
    5.  SDP Connection Attribute for DTLS . . . . . . . . . . . . . .   4
      5.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   6.  SDP Offer/Answer Procedures . . . . . . . . . . . . . . . . .   5
-     6.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   5
+   6.  SDP Offer/Answer Procedures . . . . . . . . . . . . . . . . .   4
+     6.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   4
      6.2.  Generating the Initial SDP Offer  . . . . . . . . . . . .   5
      6.3.  Generating the Answer . . . . . . . . . . . . . . . . . .   5
      6.4.  Offerer Processing of the SDP Answer  . . . . . . . . . .   6
      6.5.  Modifying the Session . . . . . . . . . . . . . . . . . .   6
    7.  RFC Updates . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
    11. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .   7
    12. Normative References  . . . . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
-   This draft defines the criteria for when a DTLS association needs to
-   be established/re-established, based on an SDP offer/answer
-   transaction.  The draft also defines how the SDP 'connection'
-   attribute is used with DTLS to signal to the remote peer whether a
-   new DTLS association needs to established/re-established.
+   [RFC5763] defines SDP Offer/Answer procedures for SRTP-DTLS.  This
+   draft defines the SDP Offer/Answer [RFC3264] procedures for
+   negotiation DTLS in general, based on the procedures in [RFC5763].
 
-2.  Abbreviations
-
-   TBD
-
-3.  Conventions
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in [RFC2119].
-
-
-
-
-Holmberg & Shpount      Expires December 17, 2015               [Page 2]
-
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
-
-
-4.  DTLS Association Re-Establishment Criteria
-
-4.1.  General
-
-   If an endpoint changes the local transport parameters associated with
-   a DTLS association, the endpoint MUST create a new DTLS association.
-   Section 6 defines the SDP Offer/Answer procedures [RFC3264]
-   associated with that.
-
-   NOTE: As described in Section 4.4, when Interactive Connectivity
-   Establishment (ICE) [RFC5245] is used there are specific scenarios
-   where the change of transport parameters do not trigger a re-
-   establishment of the DTLS association.
-
-   This section describes other events that require re-establishment of
-   a DTLS association.  If such event occur, the endpoint MUST also
-   change the local transport parameters.  An endpoint MUST NOT re-
-   establish a DTLS association without also changing the local
-   transport parameters, event if the trigger as such for the re-
-   establishment is not a change of the local transport parameters.
-
-   NOTE: In future, if new events that require re-establishment of a
-   DTLS association are found, this section should be updated to cover
-   those events.
-
-4.2.  Change of DTLS Role
-
-   [RFC5763] defines how the DTLS roles are negotiated using an offer/
-   answer transaction.  If DTLS roles associated with the DTLS
-   association have previously been negotiated, and a subsequent offer/
-   answer transaction changes the roles, the DTLS association MUST be
-   re-established.
-
-4.3.  Change of Fingerprint
-
-   If the certificate fingerprint [REF-TO-BE-ADDED] associated with the
-   DTLS association changes, the DTLS association MUST be re-
+   This draft also defines the usage of the SDP 'connection' attribute
+   with DTLS.  The attribute is used in SDP offers and answers to
+   explicitly indicate whether a new DTLS association is to be
    established.
 
-4.4.  ICE Considerations
+   As defined in [RFC5245], when Interactive Connectivity Establishment
+   (ICE) [RFC5245] is used, the ufrag value is changed both when ICE is
+   negotiated, and when ICE restart [RFC5245] occurs.  These events do
+   not always require a new DTLS association to be established, but
+   currently there is no way to explicitly indicate in an SDP offer or
+   answer whether a new DTLS association is required.  To solve that
+   problem, this draft defines the usage of the SDP 'connection'
+   attribute with DTLS.  The attribute is used in SDP offers and answers
+   to explicitly indicate whether a new DTLS association is to be
+   established/re-established.  The attribute can be used both with and
+   without ICE.
 
-   If Interactive Connectivity Establishment (ICE) [RFC5245] is used,
-   the re-establishment of a DTLS association requires the ICE session
-   to be re-established.  Similarly, the re-establishment of an ICE
-   session requires re-establishment of the DTLS association.
-
-   When an endpoint wants to re-establish the ICE session, if follows
-   the procedures in [RFC5245].  When the endpoint collects the new set
 
 
 
-Holmberg & Shpount      Expires December 17, 2015               [Page 3]
+Holmberg & Shpount      Expires December 20, 2015               [Page 2]
 
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
 
 
-   of ICE candidates, the host candidate(s) MUST be different from the
-   previously used host candidates.
+2.  Establishing a new DTLS Association
 
-   An ICE restart [RFC5245] does not require re-establishment of the
-   DTLS association and the ICE session, even if new host candidates
-   might be taken into use due to the restart.
+2.1.  General
 
-   Note that, as defined in [RFC5763], each ICE candidate associated
-   with a component is treated as being part of the same DTLS
-   association.  Therefore, from a DTLS perspective it is not considered
-   a change of local transport parameters when endpoints switch between
-   those ICE candidates, and hence such switch will not trigger re-
-   establishment of the DTLS association.
+   As defined in [RFC5763], an endpoint MUST indicate (in an offer or
+   answer) that a new DTLS association to established in the following
+   cases:
 
-   NOTE: The procedures defined in [RFC5763] are defined for SRTP-DTLS
-   [RFC5763].  However, this document refer the the procedures for
-   general usage with DTLS.
+   o  The DTLS roles change;
 
-4.5.  SIP Considerations
+   o  The fingerprint (certificate) value changes;
+
+   o  The local transport parameters (IP address and/or port) of at
+      least one endpoint change; or
+
+   o  If ICE is used and the ufrag value changes, and there is no
+      explicit indication (SDP 'connection' attribute) that a new DTLS
+      association shall not be established;
+
+   When a new DTLS association is established, an endpoint MUST use a
+   new set of transport parameters (IP address and port combination).
+
+2.2.  ICE Considerations
+
+   An ICE restart [RFC5245] does not by default require a new DTLS
+   association to be established.  A new DTLS association needs to be
+   established only if or more of the criteria listed in Section 2.1 is
+   fulfilled (e.g. if the local transport paramters change).
+
+   As defined in [RFC5763], each ICE candidate associated with a
+   component is treated as being part of the same DTLS association.
+   Therefore, from a DTLS perspective it is not considered a change of
+   local transport parameters when an endpoint switches between those
+   ICE candidates.
+
+2.3.  SIP Considerations
 
    When the Session Initiation Protocol (SIP) [RFC3261] is used as the
    signal protocol for establishing a multimedia session, dialogs
@@ -196,17 +157,40 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
    separate DTLS associations MUST be established between the caller and
    each callee.
 
+
+
+
+
+
+
+
+Holmberg & Shpount      Expires December 20, 2015               [Page 3]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
+
+
+3.  Abbreviations
+
+   TBD
+
+4.  Conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
 5.  SDP Connection Attribute for DTLS
 
 5.1.  General
 
-   The SDP 'connection' attribute was originally defined for connection-
-   oriented protocols, e.g.  TCP and TLS.  This section defines how the
-   attribute is used with DTLS.
+   The SDP 'connection' attribute [RFC4145] was originally defined for
+   connection-oriented protocols, e.g.  TCP and TLS.  This section
+   defines how the attribute is used with DTLS.
 
    A 'connection' attribute value of 'new' indicates that a new DTLS
    association MUST be established.  A 'connection' attribute value of
-   'existing' indicates that the existing DTLS association MUST be used.
+   'existing' indicates that a new DTLS association MUST NOT be
+   established.
 
    When used with DTLS, there is no default value defined for the
    attribute.  Implementations that wish to use the attribute MUST
@@ -215,15 +199,6 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
    order for endpoints to determine whether an offer or answer is
    associated with an event that requires the DTLS association to be re-
    established.
-
-
-
-
-
-Holmberg & Shpount      Expires December 17, 2015               [Page 4]
-
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
-
 
 6.  SDP Offer/Answer Procedures
 
@@ -234,14 +209,34 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
    the usage of the SDP 'setup' attribute and the SDP 'fingerprint'
    attribute [RFC4572] is affected.
 
+   The procedures in this section are based on the procedures for SRTP-
+   DTLS [RFC5763], with the addition of usage of the SDP 'connection'
+   attribute.
+
+
+
+
+
+
+
+
+Holmberg & Shpount      Expires December 20, 2015               [Page 4]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
+
+
 6.2.  Generating the Initial SDP Offer
 
    When the offerer sends the initial offer, and the offerer wants to
    establish a DTLS association, it MUST insert an SDP 'connection'
-   attribute with a 'new' value to the offer.  In addition, the offerer
+   attribute with a 'new' value in the offer.  In addition, the offerer
    MUST insert an SDP 'setup' attribute according to the procedures in
    [RFC4572], and an SDP 'fingerprint' attribute according to the
    procedures in [RFC4572], in the offer.
+
+   If ICE is used, the offerer MUST insert the SDP 'ice-ufrag' and 'ice-
+   pwd' attributes according to the procedures in [RFC5245] in the
+   offer.
 
 6.3.  Generating the Answer
 
@@ -249,51 +244,56 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
    attribute with a 'new' value, the answerer MUST insert a 'new' value
    in the associated answer.  The same applies if the answerer receives
    an offer that contains an SDP 'connection' attribute with a 'new'
-   value, but the answerer determines (based on local events) that the
-   DTLS association is to be re-established.  In addition, the answerer
-   MUSTbinsert an SDP 'setup' attribute according to the procedures in
-   [RFC4572], and an SDP 'fingerprint' attribute according to the
-   procedures in [RFC4572], in the answer.
+   value, but the answerer determines (based on the criteria for
+   establishing a new DTLS association) that a new DTLS association is
+   to be established.  In addition, the answerer MUST insert an SDP
+   'setup' attribute according to the procedures in [RFC4572], and an
+   SDP 'fingerprint' attribute according to the procedures in [RFC4572],
+   in the answer.
 
-   If the answerer does not accept the establishment (or re-
-   establishment) of the DTLS association, it MUST reject the offer
-   [RFC3264].
+   If the answerer does not accept the establishment of the DTLS
+   association, it MUST reject the "m=" lines associated with the
+   suggested DTLS association [RFC3264].
 
    If an answerer receives an offer that contains a 'connection'
    attribute with an 'existing' value, and if the answerer determines
-   that the DTLS association does not need to be re-established, it MUST
-   insert an 'existing' value in the associated answer.  In addition,
-   the answerer MUST insert an SDP 'setup' attribute with a value that
-   does not change the previously negotiated DTLS roles, and an SDP
-   'fingerprint' attribute with a value that does not change the
-   fingerprint, in the answer.
+   that a new DTLS association does not need to be established, it MUST
+   insert a connection attribute with an 'existing' value in the
+   associated answer.  In addition, the answerer MUST insert an SDP
+   'setup' attribute with a value that does not change the previously
+   negotiated DTLS roles, and an SDP 'fingerprint' attribute with a
+   value that does not change the fingerprint, in the answer.
 
    If the answerer receives an offer that does not contain an SDP
    'connection' attribute, the answerer MUST NOT insert a 'connection'
    attribute in the answer.
 
+   If ICE is used, the answerer MUST insert the SDP 'ice-ufrag' and
+   'ice-pwd' attributes according to the procedures in [RFC5245] in the
+   answer.
 
 
 
 
-Holmberg & Shpount      Expires December 17, 2015               [Page 5]
+
+Holmberg & Shpount      Expires December 20, 2015               [Page 5]
 
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
 
 
-   If the DTLS association is to be established (or re-established), and
-   if the answerer becomes DTLS client, the answerer MUST initiate the
-   procedures for establishing/re-establishing the DTLS association.  If
-   the answerer becomes DTLS server, it waits for the offerer to
-   establish (or re-establish) the DTLS association.
+   If a new DTLS association is to be established, and if the answerer
+   becomes DTLS client, the answerer MUST initiate the procedures for
+   establishing the DTLS association.  If the answerer becomes DTLS
+   server, it MUST wait for the offerer to establish the DTLS
+   association.
 
 6.4.  Offerer Processing of the SDP Answer
 
    When an offerer receives an answer that contains an SDP 'connection'
    attribute with a 'new' value, and if the offerer becomes DTLS client,
-   the offerer MUST establish/re-establish the DTLS association.  If the
-   offerer becomes DTLS server, it waits for the answerer to establish/
-   re-establish the DTLS association.
+   the offerer MUST establish a DTLS association.  If the offerer
+   becomes DTLS server, it MUST wait for the answerer to establish the
+   DTLS association.
 
    If the answer contains an SDP 'connection' attribute with an
    'existing' value, the offerer will continue using the previously
@@ -303,39 +303,46 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
 
 6.5.  Modifying the Session
 
-   When the offerer sends a subsequent offer, and a previously
-   established DTLS association is to be established (or re-
-   established), the offerer MUST insert an SDP 'connection' attribute
-   with a 'new' value in the offer.  In addition, the offerer MUST
-   insert an SDP 'setup' attribute according to the procedures in
-   [RFC4572], and an SDP 'fingerprint' attribute according to the
-   procedures in [RFC4572], in the offer.
+   When the offerer sends a subsequent offer, and the offerer wants to
+   establish a new DTLS association, the offerer MUST insert an SDP
+   'connection' attribute with a 'new' value in the offer.  In addition,
+   the offerer MUST insert an SDP 'setup' attribute according to the
+   procedures in [RFC4572], and an SDP 'fingerprint' attribute according
+   to the procedures in [RFC4572], in the offer.
 
-   When the offerer sends a subsequent offer, and the DTLS association
-   is not to be established (or re-established), the offerer MUST insert
-   an SDP 'connection' attribute with an 'existing' value in the offer.
-   In addition, the offerer MUST insert an SDP 'setup' attribute with a
-   value that does not change the previously negotiated DTLS roles, and
-   an SDP 'fingerprint' attribute with a value that does not change the
+   when the offerer sends a subsequent offer, and the offerer does not
+   want to establish a new DTLS association, if a previously established
+   DTLS association exists, the offerer MUST insert an SDP 'connection'
+   attribute with an 'existing' value in the offer.  In addition, the
+   offerer MUST insert an SDP 'setup' attribute with a value that does
+   not change the previously negotiated DTLS roles, and an SDP
+   'fingerprint' attribute with a value that does not change the
    fingerprint, in the offer.
+
+   If ICE is used, the offerer MUST insert the SDP 'ice-ufrag' and 'ice-
+   pwd' attributes according to the procedures in [RFC5245] in the
+   subsequent offer.
 
 7.  RFC Updates
 
    Here we will add the RFC updates that are needed.
 
+
+
+
+
+
+Holmberg & Shpount      Expires December 20, 2015               [Page 6]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
+
+
 8.  Security Considerations
 
-   TBD
-
-
-
-
-
-
-Holmberg & Shpount      Expires December 17, 2015               [Page 6]
-
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
-
+   This draft does not modify the security considerations associated
+   with DTLS, or the SDP offer/answer mechanism.  The draft simply
+   clarifies the procedures for negotiating and establishing a DTLS
+   association.
 
 9.  IANA Considerations
 
@@ -343,11 +350,16 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
 
 10.  Acknowledgements
 
-   TBD
+   Thanks to Justin Uberti, Martin Thomson, Paul Kyzivat and Jens
+   Guballa for providing comments and suggestions on the draft.
 
 11.  Change Log
 
    [RFC EDITOR NOTE: Please remove this section when publishing]
+
+   Changes from draft-holmberg-mmusic-sdp-dtls-00
+
+   o  - Editorial changes and clarifications.
 
 12.  Normative References
 
@@ -363,9 +375,23 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
               with Session Description Protocol (SDP)", RFC 3264, June
               2002.
 
+   [RFC4145]  Yon, D. and G. Camarillo, "TCP-Based Media Transport in
+              the Session Description Protocol (SDP)", RFC 4145,
+              September 2005.
+
    [RFC4572]  Lennox, J., "Connection-Oriented Media Transport over the
               Transport Layer Security (TLS) Protocol in the Session
               Description Protocol (SDP)", RFC 4572, July 2006.
+
+
+
+
+
+
+Holmberg & Shpount      Expires December 20, 2015               [Page 7]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS    June 2015
+
 
    [RFC5245]  Rosenberg, J., "Interactive Connectivity Establishment
               (ICE): A Protocol for Network Address Translator (NAT)
@@ -378,20 +404,6 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
               Security (DTLS)", RFC 5763, May 2010.
 
 Authors' Addresses
-
-
-
-
-
-
-
-
-
-
-Holmberg & Shpount      Expires December 17, 2015               [Page 7]
-
-Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
-
 
    Christer Holmberg
    Ericsson
@@ -432,16 +444,4 @@ Internet-DraDTLS Association Establishment Using the SDP Offe  June 2015
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Holmberg & Shpount      Expires December 17, 2015               [Page 8]
+Holmberg & Shpount      Expires December 20, 2015               [Page 8]
