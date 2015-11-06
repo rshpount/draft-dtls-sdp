@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-01.txt" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-02.txt" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -213,36 +213,36 @@
         <section title="Generating the Answer">       
             <t>
                 If an answerer receives an offer that contains an SDP 'dtls-connection' attribute with a 'new' 
-                value, the answerer MUST insert a 'new' value in the associated answer. The same applies
-                if the answerer receives an offer that contains an SDP 'dtls-connection' attribute with a 'new'
-                value, but the answerer determines (based on the criteria for establishing a new DTLS
-                association) that a new DTLS association is to be established. In addition, the answerer MUST 
-                insert an SDP 'setup' attribute according to the procedures in <xref format="default" 
-                pageno="false" target="RFC4145"/>, and an SDP 'fingerprint' attribute according to the 
-                procedures in <xref format="default" pageno="false" target="RFC4572"/>, in the answer.
+                value, or if the answerer receives and offer that contains an 'dtls-connection' attribute with an
+                'existing' value and the answerer determines (based on the criteria for establishing 
+                a new DTLS association) that a new DTLS association is to be established, the answerer MUST 
+                insert a 'new' value in the associated answer. In addition, the answerer MUST insert an 
+                SDP 'setup' attribute according to the procedures in <xref format="default" pageno="false" 
+                target="RFC4145"/>, and an SDP 'fingerprint' attribute according to the procedures in 
+                <xref format="default" pageno="false" target="RFC4572"/>, in the answer.
             </t>
             <t>
-                If the answerer does not accept the establishment of the DTLS association, it MUST 
-                reject the "m=" lines associated with the suggested DTLS association <xref format="default" 
-                pageno="false" target="RFC3264"/>.
+                If an answerer receives an offer that contains an SDP 'dtls-connection' attribute with a 'new' 
+                value, and if the answerer does not accept the establishment of a new DTLS association, the
+                answerer MUST reject the "m=" lines associated with the suggested DTLS association 
+                <xref format="default" pageno="false" target="RFC3264"/>.
             </t>
-            <t>
+            <t>            
                 If an answerer receives an offer that contains a 'dtls-connection' attribute with an 'existing' value, 
-                and if the answerer determines that a new DTLS association does not need to be established,
-                it MUST insert a connection attribute with an 'existing' value in the associated answer. 
-                In addition, the answerer MUST insert an SDP 'setup' attribute with a value that does not 
-                change the previously negotiated  DTLS roles, and an SDP 'fingerprint' attribute with a value 
-                that does not change the fingerprint, in the answer.
+                and if the answerer determines that a new DTLS association is not to be established,
+                the answerer MUST insert a 'dtls-connection' attribute with an 'existing' value in the 
+                associated answer. In addition, the answerer MUST insert an SDP 'setup' attribute with a 
+                value that does not change the previously negotiated DTLS roles, and an SDP 'fingerprint' 
+                attribute with a value that does not change the previously sent fingerprint, in the answer.
             </t>
             <t>
                 If the answerer receives an offer that does not contain an SDP 'dtls-connection' attribute, 
                 the answerer MUST NOT insert a 'dtls-connection' attribute in the answer.
             </t>
             <t>
-                If a new DTLS association is to be established, and if the answerer 
-                becomes DTLS client, the answerer MUST initiate the procedures for establishing 
-                the DTLS association. If the answerer becomes DTLS server, it MUST wait for the offerer to 
-                establish the DTLS association.
+                If a new DTLS association is to be established, and if the answerer becomes DTLS client, 
+                the answerer MUST initiate the procedures for establishing the DTLS association. If the 
+                answerer becomes DTLS server, it MUST wait for the offerer to establish the DTLS association.
             </t>
         </section>
         <section title="Offerer Processing of the SDP Answer">
@@ -261,7 +261,7 @@
         </section>
         <section title="Modifying the Session">
             <t>
-                When the offerer sends a subsequent offer, and the offerer wants to establish a new 
+                When the offerer sends a subsequent offer, and if the offerer wants to establish a new 
                 DTLS association, the offerer MUST insert an SDP 'dtls-connection' attribute with a 'new' 
                 value in the offer. In addition, the offerer MUST insert an SDP 'setup' attribute 
                 according to the procedures in <xref format="default" pageno="false" target="RFC4145"/>, 
@@ -270,11 +270,11 @@
              </t>
              <t>
                 when the offerer sends a subsequent offer, and the offerer does not want to establish
-                a new DTLS association, if a previously established DTLS association exists, the 
+                a new DTLS association, and if a previously established DTLS association exists, the 
                 offerer MUST insert an SDP 'dtls-connection' attribute with an 'existing' value in the offer. 
                 In addition, the offerer MUST insert an SDP 'setup' attribute with a value that does 
                 not change the previously negotiated DTLS roles, and an SDP 'fingerprint' attribute with 
-                a value that does not change the fingerprint, in the offer.
+                a value that does not change the previously sent fingerprint, in the offer.
             </t>
         </section>
 	</section>
@@ -315,9 +315,452 @@
 
     
     <section title="RFC Updates">
-		<t>
-			Here we will add the RFC updates that are needed.
-		</t>
+        <section title="General">
+            <t>
+                This section updates specifications that use DTLS-protected media, in
+                order to reflect the procedures defined in this specification.
+            </t>
+        </section>
+        <section title="Update to RFC 5763">
+            <figure>
+                <artwork align="left" alt="" height="" name="" type="" width="" xml:space="preserve"><![CDATA[
+
+Update to section 5:
+                
+OLD TEXT:
+
+5.  Establishing a Secure Channel
+
+   The two endpoints in the exchange present their identities as part of
+   the DTLS handshake procedure using certificates.  This document uses
+   certificates in the same style as described in "Connection-Oriented
+   Media Transport over the Transport Layer Security (TLS) Protocol in
+   the Session Description Protocol (SDP)" [RFC4572].
+
+   If self-signed certificates are used, the content of the
+   subjectAltName attribute inside the certificate MAY use the uniform
+   resource identifier (URI) of the user.  This is useful for debugging
+   purposes only and is not required to bind the certificate to one of
+   the communication endpoints.  The integrity of the certificate is
+   ensured through the fingerprint attribute in the SDP.  The
+   subjectAltName is not an important component of the certificate
+   verification.
+
+   The generation of public/private key pairs is relatively expensive.
+   Endpoints are not required to generate certificates for each session.
+
+   The offer/answer model, defined in [RFC3264], is used by protocols
+   like the Session Initiation Protocol (SIP) [RFC3261] to set up
+   multimedia sessions.  In addition to the usual contents of an SDP
+   [RFC4566] message, each media description ("m=" line and associated
+   parameters) will also contain several attributes as specified in
+   [RFC5764], [RFC4145], and [RFC4572].
+
+   When an endpoint wishes to set up a secure media session with another
+   endpoint, it sends an offer in a SIP message to the other endpoint.
+   This offer includes, as part of the SDP payload, the fingerprint of
+   the certificate that the endpoint wants to use.  The endpoint SHOULD
+   send the SIP message containing the offer to the offerer's SIP proxy
+   over an integrity protected channel.  The proxy SHOULD add an
+   Identity header field according to the procedures outlined in
+   [RFC4474].  The SIP message containing the offer SHOULD be sent to
+   the offerer's SIP proxy over an integrity protected channel.  When
+   the far endpoint receives the SIP message, it can verify the identity
+   of the sender using the Identity header field.  Since the Identity
+   header field is a digital signature across several SIP header fields,
+   in addition to the body of the SIP message, the receiver can also be
+   certain that the message has not been tampered with after the digital
+   signature was applied and added to the SIP message.
+
+   The far endpoint (answerer) may now establish a DTLS association with
+   the offerer.  Alternately, it can indicate in its answer that the
+   offerer is to initiate the TLS association.  In either case, mutual
+   DTLS certificate-based authentication will be used.  After completing
+   the DTLS handshake, information about the authenticated identities,
+   including the certificates, are made available to the endpoint
+   application.  The answerer is then able to verify that the offerer's
+   certificate used for authentication in the DTLS handshake can be
+   associated to the certificate fingerprint contained in the offer in
+   the SDP.  At this point, the answerer may indicate to the end user
+   that the media is secured.  The offerer may only tentatively accept
+   the answerer's certificate since it may not yet have the answerer's
+   certificate fingerprint.
+
+   When the answerer accepts the offer, it provides an answer back to
+   the offerer containing the answerer's certificate fingerprint.  At
+   this point, the offerer can accept or reject the peer's certificate
+   and the offerer can indicate to the end user that the media is
+   secured.
+
+   Note that the entire authentication and key exchange for securing the
+   media traffic is handled in the media path through DTLS.  The
+   signaling path is only used to verify the peers' certificate
+   fingerprints.
+
+   The offer and answer MUST conform to the following requirements.
+
+   o  The endpoint MUST use the setup attribute defined in [RFC4145].
+      The endpoint that is the offerer MUST use the setup attribute
+      value of setup:actpass and be prepared to receive a client_hello
+      before it receives the answer.  The answerer MUST use either a
+      setup attribute value of setup:active or setup:passive.  Note that
+      if the answerer uses setup:passive, then the DTLS handshake will
+      not begin until the answerer is received, which adds additional
+      latency. setup:active allows the answer and the DTLS handshake to
+      occur in parallel.  Thus, setup:active is RECOMMENDED.  Whichever
+      party is active MUST initiate a DTLS handshake by sending a
+      ClientHello over each flow (host/port quartet).
+
+   o  The endpoint MUST NOT use the connection attribute defined in
+      [RFC4145].
+
+   o  The endpoint MUST use the certificate fingerprint attribute as
+      specified in [RFC4572].
+
+   o  The certificate presented during the DTLS handshake MUST match the
+      fingerprint exchanged via the signaling path in the SDP.  The
+      security properties of this mechanism are described in Section 8.
+
+   o  If the fingerprint does not match the hashed certificate, then the
+      endpoint MUST tear down the media session immediately.  Note that
+      it is permissible to wait until the other side's fingerprint has
+      been received before establishing the connection; however, this
+      may have undesirable latency effects.
+
+   
+NEW TEXT:
+
+5.  Establishing a Secure Channel
+
+   The two endpoints in the exchange present their identities as part of
+   the DTLS handshake procedure using certificates.  This document uses
+   certificates in the same style as described in "Connection-Oriented
+   Media Transport over the Transport Layer Security (TLS) Protocol in
+   the Session Description Protocol (SDP)" [RFC4572].
+
+   If self-signed certificates are used, the content of the
+   subjectAltName attribute inside the certificate MAY use the uniform
+   resource identifier (URI) of the user.  This is useful for debugging
+   purposes only and is not required to bind the certificate to one of
+   the communication endpoints.  The integrity of the certificate is
+   ensured through the fingerprint attribute in the SDP.  The
+   subjectAltName is not an important component of the certificate
+   verification.
+
+   The generation of public/private key pairs is relatively expensive.
+   Endpoints are not required to generate certificates for each session.
+
+   The offer/answer model, defined in [RFC3264], is used by protocols
+   like the Session Initiation Protocol (SIP) [RFC3261] to set up
+   multimedia sessions.  In addition to the usual contents of an SDP
+   [RFC4566] message, each media description ("m=" line and associated
+   parameters) will also contain several attributes as specified in
+   [RFC5764], [RFC4145], and [RFC4572].
+
+   When an endpoint wishes to set up a secure media session with another
+   endpoint, it sends an offer in a SIP message to the other endpoint.
+   This offer includes, as part of the SDP payload, the fingerprint of
+   the certificate that the endpoint wants to use.  The endpoint SHOULD
+   send the SIP message containing the offer to the offerer's SIP proxy
+   over an integrity protected channel.  The proxy SHOULD add an
+   Identity header field according to the procedures outlined in
+   [RFC4474].  The SIP message containing the offer SHOULD be sent to
+   the offerer's SIP proxy over an integrity protected channel.  When
+   the far endpoint receives the SIP message, it can verify the identity
+   of the sender using the Identity header field.  Since the Identity
+   header field is a digital signature across several SIP header fields,
+   in addition to the body of the SIP message, the receiver can also be
+   certain that the message has not been tampered with after the digital
+   signature was applied and added to the SIP message.
+
+   The far endpoint (answerer) may now establish a DTLS association with
+   the offerer.  Alternately, it can indicate in its answer that the
+   offerer is to initiate the TLS association.  In either case, mutual
+   DTLS certificate-based authentication will be used.  After completing
+   the DTLS handshake, information about the authenticated identities,
+   including the certificates, are made available to the endpoint
+   application.  The answerer is then able to verify that the offerer's
+   certificate used for authentication in the DTLS handshake can be
+   associated to the certificate fingerprint contained in the offer in
+   the SDP.  At this point, the answerer may indicate to the end user
+   that the media is secured.  The offerer may only tentatively accept
+   the answerer's certificate since it may not yet have the answerer's
+   certificate fingerprint.
+
+   When the answerer accepts the offer, it provides an answer back to
+   the offerer containing the answerer's certificate fingerprint.  At
+   this point, the offerer can accept or reject the peer's certificate
+   and the offerer can indicate to the end user that the media is
+   secured.
+
+   Note that the entire authentication and key exchange for securing the
+   media traffic is handled in the media path through DTLS.  The
+   signaling path is only used to verify the peers' certificate
+   fingerprints.
+
+   The offer and answer MUST conform to the following requirements.
+
+   o  The endpoint MUST use the setup attribute defined in [RFC4145].
+      The endpoint that is the offerer MUST use the setup attribute
+      value of setup:actpass and be prepared to receive a client_hello
+      before it receives the answer.  The answerer MUST use either a
+      setup attribute value of setup:active or setup:passive.  Note that
+      if the answerer uses setup:passive, then the DTLS handshake will
+      not begin until the answerer is received, which adds additional
+      latency. setup:active allows the answer and the DTLS handshake to
+      occur in parallel.  Thus, setup:active is RECOMMENDED.  Whichever
+      party is active MUST initiate a DTLS handshake by sending a
+      ClientHello over each flow (host/port quartet).
+
+   o  The endpoint MUST NOT use the connection attribute defined in
+      [RFC4145].
+
+   o  The endpoint MUST use the certificate fingerprint attribute as
+      specified in [RFC4572].
+
+   o  The certificate presented during the DTLS handshake MUST match the
+      fingerprint exchanged via the signaling path in the SDP.  The
+      security properties of this mechanism are described in Section 8.
+
+   o  If the fingerprint does not match the hashed certificate, then the
+      endpoint MUST tear down the media session immediately.  Note that
+      it is permissible to wait until the other side's fingerprint has
+      been received before establishing the connection; however, this
+      may have undesirable latency effects.
+
+      
+Update to section 6.6:
+
+OLD TEXT:
+
+6.6.  Session Modification
+
+   Once an answer is provided to the offerer, either endpoint MAY
+   request a session modification that MAY include an updated offer.
+   This session modification can be carried in either an INVITE or
+   UPDATE request.  The peers can reuse the existing associations if
+   they are compatible (i.e., they have the same key fingerprints and
+   transport parameters), or establish a new one following the same
+   rules are for initial exchanges, tearing down the existing
+   association as soon as the offer/answer exchange is completed.  Note
+   that if the active/passive status of the endpoints changes, a new
+   connection MUST be established.
+ 
+NEW TEXT:
+
+6.6.  Session Modification
+
+   Once an answer is provided to the offerer, either endpoint MAY
+   request a session modification that MAY include an updated offer.
+   This session modification can be carried in either an INVITE or
+   UPDATE request.  The peers can reuse the existing associations if
+   they are compatible (i.e., they have the same key fingerprints and
+   transport parameters), or establish a new one following the same
+   rules are for initial exchanges, tearing down the existing
+   association as soon as the offer/answer exchange is completed.  Note
+   that if the active/passive status of the endpoints changes, a new
+   connection MUST be established.
+ 
+                ]]></artwork>
+            </figure>
+        </section>
+        <section title="Update to RFC 7345">
+            <figure>
+                <artwork align="left" alt="" height="" name="" type="" width="" xml:space="preserve"><![CDATA[
+
+Update to section 4:
+                
+OLD TEXT:
+
+4.1.  General
+
+   An endpoint (i.e., both the offerer and the answerer) MUST create an
+   SDP media description ("m=" line) for each UDPTL-over-DTLS media
+   stream and MUST assign a UDP/TLS/UDPTL value (see Table 1) to the
+   "proto" field of the "m=" line.
+
+   The procedures in this section apply to an "m=" line associated with
+   a UDPTL-over-DTLS media stream.
+
+   In order to negotiate a UDPTL-over-DTLS media stream, the following
+   SDP attributes are used:
+
+   o  The SDP attributes defined for UDPTL over UDP, as described in
+      [ITU.T38.2010]; and
+
+   o  The SDP attributes, defined in [RFC4145] and [RFC4572], as
+      described in this section.
+
+   The endpoint MUST NOT use the SDP "connection" attribute [RFC4145].
+
+   In order to negotiate the TLS roles for the UDPTL-over-DTLS transport
+   connection, the endpoint MUST use the SDP "setup" attribute
+   [RFC4145].
+
+   If the endpoint supports, and is willing to use, a cipher suite with
+   an associated certificate, the endpoint MUST include an SDP
+   "fingerprint" attribute [RFC4572].  The endpoint MUST support SHA-256
+   for generating and verifying the SDP "fingerprint" attribute value.
+   The use of SHA-256 is preferred.  UDPTL over DTLS, at a minimum, MUST
+   support TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 and MUST support
+   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.  UDPTL over DTLS MUST prefer
+   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and any other Perfect Forward
+   Secrecy (PFS) cipher suites over non-PFS cipher suites.
+   Implementations SHOULD disable TLS-level compression.
+
+   If a cipher suite with an associated certificate is selected during
+   the DTLS handshake, the certificate received during the DTLS
+   handshake MUST match the fingerprint received in the SDP
+   "fingerprint" attribute.  If the fingerprint does not match the
+   hashed certificate, then the endpoint MUST tear down the media
+   session immediately.  Note that it is permissible to wait until the
+   other side's fingerprint has been received before establishing the
+   connection; however, this may have undesirable latency effects.
+
+4.2.  Generating the Initial Offer
+
+   The offerer SHOULD assign the SDP "setup" attribute with a value of
+   "actpass", unless the offerer insists on being either the sender or
+   receiver of the DTLS ClientHello message, in which case the offerer
+   can use either a value of "active" (the offerer will be the sender of
+   ClientHello) or "passive" (the offerer will be the receiver of
+   ClientHello).  The offerer MUST NOT assign an SDP "setup" attribute
+   with a "holdconn" value.
+
+   If the offerer assigns the SDP "setup" attribute with a value of
+   "actpass" or "passive", the offerer MUST be prepared to receive a
+   DTLS ClientHello message before it receives the SDP answer.
+
+4.3.  Generating the Answer
+
+   If the answerer accepts the offered UDPTL-over-DTLS transport
+   connection, in the associated SDP answer, the answerer MUST assign an
+   SDP "setup" attribute with a value of either "active" or "passive",
+   according to the procedures in [RFC4145].  The answerer MUST NOT
+   assign an SDP "setup" attribute with a value of "holdconn".
+
+   If the answerer assigns an SDP "setup" attribute with a value of
+   "active" value, the answerer MUST initiate a DTLS handshake by
+   sending a DTLS ClientHello message on the negotiated media stream,
+   towards the IP address and port of the offerer.
+
+4.4.  Offerer Processing of the Answer
+
+   When the offerer receives an SDP answer, if the offerer ends up being
+   active it MUST initiate a DTLS handshake by sending a DTLS
+   ClientHello message on the negotiated media stream, towards the IP
+   address and port of the answerer.
+
+4.5.  Modifying the Session
+
+   Once an offer/answer exchange has been completed, either endpoint MAY
+   send a new offer in order to modify the session.  The endpoints can
+   reuse the existing DTLS association if the key fingerprint values and
+   transport parameters indicated by each endpoint are unchanged.
+   Otherwise, following the rules for the initial offer/answer exchange,
+   the endpoints can negotiate and create a new DTLS association and,
+   once created, delete the previous DTLS association, following the
+   same rules for the initial offer/answer exchange.  Each endpoint
+   needs to be prepared to receive data on both the new and old DTLS
+   associations as long as both are alive.
+   
+NEW TEXT:
+
+4.1.  General
+
+   An endpoint (i.e., both the offerer and the answerer) MUST create an
+   SDP media description ("m=" line) for each UDPTL-over-DTLS media
+   stream and MUST assign a UDP/TLS/UDPTL value (see Table 1) to the
+   "proto" field of the "m=" line.
+
+   The procedures in this section apply to an "m=" line associated with
+   a UDPTL-over-DTLS media stream.
+
+   In order to negotiate a UDPTL-over-DTLS media stream, the following
+   SDP attributes are used:
+
+   o  The SDP attributes defined for UDPTL over UDP, as described in
+      [ITU.T38.2010]; and
+
+   o  The SDP attributes, defined in [RFC4145] and [RFC4572], as
+      described in this section.
+
+   The endpoint MUST NOT use the SDP "connection" attribute [RFC4145].
+
+   In order to negotiate the TLS roles for the UDPTL-over-DTLS transport
+   connection, the endpoint MUST use the SDP "setup" attribute
+   [RFC4145].
+
+   If the endpoint supports, and is willing to use, a cipher suite with
+   an associated certificate, the endpoint MUST include an SDP
+   "fingerprint" attribute [RFC4572].  The endpoint MUST support SHA-256
+   for generating and verifying the SDP "fingerprint" attribute value.
+   The use of SHA-256 is preferred.  UDPTL over DTLS, at a minimum, MUST
+   support TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 and MUST support
+   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.  UDPTL over DTLS MUST prefer
+   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and any other Perfect Forward
+   Secrecy (PFS) cipher suites over non-PFS cipher suites.
+   Implementations SHOULD disable TLS-level compression.
+
+   If a cipher suite with an associated certificate is selected during
+   the DTLS handshake, the certificate received during the DTLS
+   handshake MUST match the fingerprint received in the SDP
+   "fingerprint" attribute.  If the fingerprint does not match the
+   hashed certificate, then the endpoint MUST tear down the media
+   session immediately.  Note that it is permissible to wait until the
+   other side's fingerprint has been received before establishing the
+   connection; however, this may have undesirable latency effects.
+
+4.2.  Generating the Initial Offer
+
+   The offerer SHOULD assign the SDP "setup" attribute with a value of
+   "actpass", unless the offerer insists on being either the sender or
+   receiver of the DTLS ClientHello message, in which case the offerer
+   can use either a value of "active" (the offerer will be the sender of
+   ClientHello) or "passive" (the offerer will be the receiver of
+   ClientHello).  The offerer MUST NOT assign an SDP "setup" attribute
+   with a "holdconn" value.
+
+   If the offerer assigns the SDP "setup" attribute with a value of
+   "actpass" or "passive", the offerer MUST be prepared to receive a
+   DTLS ClientHello message before it receives the SDP answer.
+
+4.3.  Generating the Answer
+
+   If the answerer accepts the offered UDPTL-over-DTLS transport
+   connection, in the associated SDP answer, the answerer MUST assign an
+   SDP "setup" attribute with a value of either "active" or "passive",
+   according to the procedures in [RFC4145].  The answerer MUST NOT
+   assign an SDP "setup" attribute with a value of "holdconn".
+
+   If the answerer assigns an SDP "setup" attribute with a value of
+   "active" value, the answerer MUST initiate a DTLS handshake by
+   sending a DTLS ClientHello message on the negotiated media stream,
+   towards the IP address and port of the offerer.
+
+4.4.  Offerer Processing of the Answer
+
+   When the offerer receives an SDP answer, if the offerer ends up being
+   active it MUST initiate a DTLS handshake by sending a DTLS
+   ClientHello message on the negotiated media stream, towards the IP
+   address and port of the answerer.
+
+4.5.  Modifying the Session
+
+   Once an offer/answer exchange has been completed, either endpoint MAY
+   send a new offer in order to modify the session.  The endpoints can
+   reuse the existing DTLS association if the key fingerprint values and
+   transport parameters indicated by each endpoint are unchanged.
+   Otherwise, following the rules for the initial offer/answer exchange,
+   the endpoints can negotiate and create a new DTLS association and,
+   once created, delete the previous DTLS association, following the
+   same rules for the initial offer/answer exchange.  Each endpoint
+   needs to be prepared to receive data on both the new and old DTLS
+   associations as long as both are alive.
+   
+                ]]></artwork>
+            </figure>
+        </section>
 	</section>
     
 	<section title="Security Considerations">
@@ -360,6 +803,11 @@
 		
 	<section title="Change Log">	
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-01
+			<list style="symbols">
+                <t>- Annex regarding 'dtls-connection-id' attribute removed.</t>
+			</list>
+		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-00
 			<list style="symbols">
                 <t>- SDP 'connection' attribute replaced with new 'dtls-connection' attribute.</t>
@@ -396,127 +844,6 @@
         <?rfc include="reference.RFC.5234"?>
         <?rfc include="reference.RFC.5245"?>
         <?rfc include="reference.RFC.5763"?>
-    </references>
-    
-    <section  title="Design Considerations" toc="default">
-		<section  title="dtls-connection versus dtls-connection-id" toc="default">
-            <t>
-                The text below is from an e-mail sent by Roman to the
-                MMUSIC mailing list, 1st October 2015. It is intended
-                to serve as background reading when discussing the
-                way forward regarding the SDP attribute.
-            </t>
-            <figure>
-				<artwork align="left"><![CDATA[
-
-The "dtls-ufrag" has little to do with ICE and exists 
-in a completely different layer. We can call this 
-attribute "dtls-connection-id" if this will makes it 
-less spooky. The problem that I am trying to resolve 
-with new attribute is related to when new DTLS association 
-needs to be established. I would argue that original 
-intent was, that new DTLS association needs to be 
-established on change of one of the end points or 
-DTLS association setup attributes (setup role or 
-fingerprint).
-
-Originally, end point change was detected based on 
-transport 5-tuple change. This, of cause, does not 
-work for ICE, where 5-tuple is not known in advance 
-and all 5-tuples associated with the same ICE component 
-should be treated as the same connection. One option was 
-to detect end point change when ICE is used based on 
-ICE ufrag change, but this does not work either since 
-ufrag can change due to ICE restart, but the same 
-endpoints will continue to communicate.
-
-I would also argue that setting up new DTLS association 
-on 5-tuple change does not always work for non-ICE case 
-either, since we can have an end point which can initiate 
-a re-INVITE when it detects the local IP changes due to 
-DHCP lease expiration or any other reason. This transport 
-change does not necessarily require DTLS association 
-change, and new DTLS handshake is undesirable since it 
-will delay the media flow re-establishment but several 
-network round trips.
-
-So, we need to detect when two new end-points are 
-communicating and new DTLS association needs to be 
-setup. What we originally proposed is that end point 
-will simply tell that it is setting up a new session 
-by using SDP connection attribute or some renamed 
-version of it.
-
-What I am saying here is that end point cannot always 
-identify if it needs to setup a new DTLS association. 
-The problem arises when new offer is generated in 
-response to an offerless INVITE. In such case, an end 
-point does not know if it is continuing to communicate 
-with the same end-point or if this offer is intended 
-to be sent to a new end point.
-
-There are two solution possible to this:
-
-1. We specify that if an end points generates an offer in 
-response to an offer-less INVITE it should always assume 
-it is communicating with a new end point, it MUST add 
-"connection:new" and MUST make sure that none of the 
-existing transports can be possibly reused for this new 
-DTLS association by allocating new IP:port for non ICE 
-or a complete new set of ICE candidates in case of ICE. 
-This will work, but it is wasteful when offer-less INVITE 
-re-establishes connection between two existing end points. 
-In such cases additional ports will be consumed, TURN 
-tunnels will be allocated, and time spent on creating a 
-DTLS session when all of this can be simply reused.
-
-2. Instead of asking the end point which generates the 
-offer to determine if it is establishing a new DTLS 
-association, we will ask the end point to identify itself. 
-So, instead of SDP connection attribute, an end point 
-will provide some sort of randomly generated end point 
-identifier in the new attribute (dtls-ufrag or 
-dtls-connection-id). When the connection ID pair stays 
-the same, the existing DTLS association continues to run 
-over the negotiated transport. If one of the connection 
-IDs changes, this would mean new DTLS association would 
-need to be established. This nicely uncouples end point 
-change identification from transport and makes negotiation 
-follow the original intent.
-
-In case of response to an offer-less INVITE, an offer with 
-the existing connection ID will be generated. If this offer 
-is sent to a new end point, both end points will detect 
-that new DTLS association is required due to connection ID 
-change of the answering end point. If this offer will be 
-sent to an end point which is already a part of the existing 
-DTLS association, no new DTLS association will be necessary, 
-since both connection IDs will stay the same.
-
-This also gives us path to a more "strategic" solution in the 
-future. DTLS handshake can be extended to include the 
-connection ID. Each DTLS handshake can negotiate a association 
-identifier similar to SSRC which can be used in the all 
-subsequent DTLS messages for this association. This way 
-multiple DTLS associations can be multiplexed over the single 
-transport and each of them can be tied to an m= line in 
-offer/answer. This, of cause, is not part of the current 
-draft and is outside of MMUSIC chapter, but does provide a 
-natural extension path for DTLS in the future.
-
-In general Christer and I are trying to understand if there 
-is interest in formalizing the dtls-connection-id option 
-(more complex) or if we should stick with SDP 
-connection:new/existing attribute and force new DTLS association 
-always be established in response to offer-less INVITE (simpler 
-option but can waste resources).
-
-Please let us know if these options need further clarification 
-or if you have any additional questions or opinions.
-                
-				]]></artwork>
-			</figure>
-		</section>
-    </section>    
+    </references>    
 </back>
 </rfc>
