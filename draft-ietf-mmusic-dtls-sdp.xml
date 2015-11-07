@@ -140,7 +140,7 @@
             </t>
         </section>
     </section>
-	<section title="SDP DTLS-Connection Attribute" anchor="sec-dcon-attr">
+	<section title="SDP dtls-connection Attribute" anchor="sec-dcon-attr">
         <section title="General">
             <t>
                 The SDP 'connection' attribute <xref format="default" pageno="false" target="RFC4145"/> 
@@ -184,16 +184,72 @@
     <section title="SDP Offer/Answer Procedures" anchor="sec-oa">
         <section title="General">
             <t>
-                This section defines the SDP offer/answer procedures for using the SDP 'dtls-connection' 
-                attribute for DTLS. The section also describes how the usage of the SDP 'setup' 
-                attribute and the SDP 'fingerprint' attribute <xref format="default" pageno="false" 
-                target="RFC4572"/> is affected.
+                This section defines the generic SDP offer/answer procedures for negotiating
+                a DTLS association. Additional procedures (e.g. regarding usage of usage specific SDP 
+                attributes etc) for individual DTLS usages (e.g. SRTP-DTLS) are outside the scope 
+                of this specification, and needs to be specified in a usage specific specification.
             </t>
             <t>
-                The procedures in this section are based on the procedures for SRTP-DTLS
+                NOTE: The procedures in this section are based on the procedures for SRTP-DTLS
                 <xref format="default" pageno="false" target="RFC5763"/>, with the addition
                 of usage of the SDP 'dtls-connection' attribute.
             </t>
+			<t>
+                The procedures in this section apply to an SDP media description ("m=" line) associated 
+                a DTLS-protected media/data stream.				
+			</t>
+			<t>
+                In order to negotiate a DTLS association, the following SDP attributes are used:
+                <list style="symbols">
+                    <t>
+                        The SDP 'setup' attribute, defined in <xref target="RFC4145" pageno="false" 
+                        format="default" />, is used to negotiate the DTLS roles;
+                    </t>
+                    <t>
+                        The SDP 'fingerprint' attribute, defined in <xref target="RFC4572" 
+                        pageno="false" format="default" />, is used to provide the fingerprint
+                        value; and
+                    </t>
+                    <t>
+                        The SDP 'dtls-connection' attribute, defined in this specification, is
+                        used to explicitly indicate whether a new DTLS association is to be
+                        established or whether a previous association is to be used.
+                    </t>
+                </list>
+			</t>
+			<t>
+				Endpoints MUST NOT use the SDP 'connection' attribute 
+				<xref target="RFC4145" pageno="false" format="default" />
+                when negotiating a DTLS association.
+			</t>
+            <t>
+                NOTE: The SDP 'connection' attribute may be used if the usage
+                is associated with another protocol layer, e.g. SCTP or TCP, used
+                together with DTLS.
+            </t>
+            <t>
+                Unlike for TCP and TLS connections, endpoints MUST NOT use the 
+                SDP 'setup' attribute 'holdconn' value when negotiating a DTLS association.
+            </t>
+            <t>
+                Endpoints MUST support SHA-256 for generating and verifying the fingerprint
+                value associated with the DTLS association. The use of SHA-256 is preferred. 
+            </t>
+            <t>
+                Endpoints MUST, at a minimum, support TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 
+				and MUST support TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256. UDPTL over DTLS MUST 
+				prefer TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and any other Perfect Forward Secrecy 
+				(PFS) cipher suites over non-PFS cipher suites. Implementations SHOULD disable 
+				TLS-level compression.
+			</t>
+			<t>
+				The certificate received during the DTLS handshake MUST match 
+				the fingerprint received in the SDP "fingerprint" attribute. If the fingerprint 
+				does not match the hashed certificate, then the endpoint MUST tear down the media 
+				session immediately. Note that it is permissible to wait until the other side's 
+				fingerprint has been received before establishing the connection; however, this 
+				may have undesirable latency effects.
+			</t>            
         </section>
         
         <section title="Generating the Initial SDP Offer">
@@ -204,10 +260,6 @@
                 to the procedures in <xref format="default" pageno="false" target="RFC4145"/>, and 
                 an SDP 'fingerprint' attribute according to the procedures in <xref format="default" 
                 pageno="false" target="RFC4572"/>, in the offer.
-            </t>
-            <t>
-                Unlike for TCP and TLS connections, in case of DTLS associations the SDP 'setup' attribute 
-                'holdconn' value MUST NOT be used.
             </t>
         </section>
         <section title="Generating the Answer">       
@@ -275,6 +327,10 @@
                 In addition, the offerer MUST insert an SDP 'setup' attribute with a value that does 
                 not change the previously negotiated DTLS roles, and an SDP 'fingerprint' attribute with 
                 a value that does not change the previously sent fingerprint, in the offer.
+            </t>
+            <t>
+                NOTE: When a new DTLS association is established, each endpoint needs to be prepared to receive 
+                data on both the new and old DTLS associations as long as both are alive.
             </t>
         </section>
 	</section>
@@ -765,8 +821,9 @@ NEW TEXT:
     
 	<section title="Security Considerations">
 		<t>
-			This draft does not modify the security considerations associated with DTLS, or
-            the SDP offer/answer mechanism. The draft simply clarifies the procedures for
+			This specification does not modify the security considerations associated with DTLS, or
+            the SDP offer/answer mechanism. In addition to the introduction of the SDP
+            'dtls-connection' attribute, the specification simply clarifies the procedures for
             negotiating and establishing a DTLS association.
 		</t>
 	</section>
@@ -806,6 +863,7 @@ NEW TEXT:
         <t>Changes from draft-ietf-mmusic-sdp-dtls-01
 			<list style="symbols">
                 <t>- Annex regarding 'dtls-connection-id' attribute removed.</t>
+                <t>- Additional SDP offer/answer procedures, related to certificates, added.</t>
 			</list>
 		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-00
