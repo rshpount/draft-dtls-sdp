@@ -4,8 +4,8 @@
 Network Working Group                                        C. Holmberg
 Internet-Draft                                                  Ericsson
 Intended status: Standards Track                              R. Shpount
-Expires: May 10, 2016                                        TurboBridge
-                                                        November 7, 2015
+Expires: May 14, 2016                                        TurboBridge
+                                                       November 11, 2015
 
 
              Using the SDP Offer/Answer Mechanism for DTLS
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 10, 2016.
+   This Internet-Draft will expire on May 14, 2016.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                  [Page 1]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 1]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
@@ -81,13 +81,13 @@ Table of Contents
      6.5.  Modifying the Session . . . . . . . . . . . . . . . . . .   7
    7.  ICE Considerations  . . . . . . . . . . . . . . . . . . . . .   8
    8.  SIP Considerations  . . . . . . . . . . . . . . . . . . . . .   8
-   9.  RFC Updates . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     9.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   9.  RFC Updates . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     9.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   9
      9.2.  Update to RFC 5763  . . . . . . . . . . . . . . . . . . .   9
      9.3.  Update to RFC 7345  . . . . . . . . . . . . . . . . . . .  14
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  18
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
-     11.1.  Registration of New SDP Attribute  . . . . . . . . . . .  18
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  17
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
+     11.1.  Registration of New SDP Attribute  . . . . . . . . . . .  17
    12. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
    13. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  18
    14. Normative References  . . . . . . . . . . . . . . . . . . . .  19
@@ -108,7 +108,7 @@ Table of Contents
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                  [Page 2]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 2]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
@@ -164,7 +164,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                  [Page 3]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 3]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
@@ -220,7 +220,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                  [Page 4]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 4]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
@@ -276,7 +276,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                  [Page 5]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 5]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
@@ -309,6 +309,11 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    [RFC4145], and an SDP 'fingerprint' attribute according to the
    procedures in [RFC4572], in the offer.
 
+   If the offerer inserts the SDP 'setup' attribute with an 'actpass' or
+   'passive' value, the offerer MUST be prepared to receive a DTLS
+   ClientHello message (if a new DTLS association is established by the
+   answerer) from the answerer before it receives the SDP answer.
+
 6.3.  Generating the Answer
 
    If an answerer receives an offer that contains an SDP 'dtls-
@@ -324,18 +329,17 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
    If an answerer receives an offer that contains an SDP 'dtls-
    connection' attribute with a 'new' value, and if the answerer does
-   not accept the establishment of a new DTLS association, the answerer
-   MUST reject the "m=" lines associated with the suggested DTLS
-   association [RFC3264].
 
 
 
-
-
-Holmberg & Shpount        Expires May 10, 2016                  [Page 6]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 6]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
+
+   not accept the establishment of a new DTLS association, the answerer
+   MUST reject the "m=" lines associated with the suggested DTLS
+   association [RFC3264].
 
    If an answerer receives an offer that contains a 'dtls-connection'
    attribute with an 'existing' value, and if the answerer determines
@@ -352,10 +356,9 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    connection' attribute in the answer.
 
    If a new DTLS association is to be established, and if the answerer
-   becomes DTLS client, the answerer MUST initiate the procedures for
-   establishing the DTLS association.  If the answerer becomes DTLS
-   server, it MUST wait for the offerer to establish the DTLS
-   association.
+   inserts an SDP 'setup' attribute with an 'active' value in the
+   answer, the answerer MUST initiate a DTLS handshake by sending a DTLS
+   ClientHello message towards the the offerer.
 
 6.4.  Offerer Processing of the SDP Answer
 
@@ -382,17 +385,17 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
    when the offerer sends a subsequent offer, and the offerer does not
    want to establish a new DTLS association, and if a previously
-   established DTLS association exists, the offerer MUST insert an SDP
-   'dtls-connection' attribute with an 'existing' value in the offer.
-   In addition, the offerer MUST insert an SDP 'setup' attribute with a
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                  [Page 7]
+Holmberg & Shpount        Expires May 14, 2016                  [Page 7]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 
+   established DTLS association exists, the offerer MUST insert an SDP
+   'dtls-connection' attribute with an 'existing' value in the offer.
+   In addition, the offerer MUST insert an SDP 'setup' attribute with a
    value that does not change the previously negotiated DTLS roles, and
    an SDP 'fingerprint' attribute with a value that does not change the
    previously sent fingerprint, in the offer.
@@ -402,6 +405,11 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    associations as long as both are alive.
 
 7.  ICE Considerations
+
+   When ICE is used, the ICE connectivity checks are performed before
+   the DTLS handshake begins.  Note that if aggressive nomination mode
+   is used, multiple candidate pairs may be marked valid before ICE
+   finally converges on a single candidate pair.
 
    An ICE restart [RFC5245] does not by default require a new DTLS
    association to be established.
@@ -431,6 +439,16 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    allocate a new set of ICE candidates, in order to ensure that two
    DTLS association would not be running over the same transport.
 
+
+
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                  [Page 8]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
 9.  RFC Updates
 
 9.1.  General
@@ -438,21 +456,11 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    This section updates specifications that use DTLS-protected media, in
    order to reflect the procedures defined in this specification.
 
-
-
-
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                  [Page 8]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
 9.2.  Update to RFC 5763
 
 
 Update to section 5:
+--------------------
 
 OLD TEXT:
 
@@ -489,6 +497,14 @@ OLD TEXT:
    the certificate that the endpoint wants to use.  The endpoint SHOULD
    send the SIP message containing the offer to the offerer's SIP proxy
    over an integrity protected channel.  The proxy SHOULD add an
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                  [Page 9]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
    Identity header field according to the procedures outlined in
    [RFC4474].  The SIP message containing the offer SHOULD be sent to
    the offerer's SIP proxy over an integrity protected channel.  When
@@ -497,14 +513,6 @@ OLD TEXT:
    header field is a digital signature across several SIP header fields,
    in addition to the body of the SIP message, the receiver can also be
    certain that the message has not been tampered with after the digital
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                  [Page 9]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
    signature was applied and added to the SIP message.
 
    The far endpoint (answerer) may now establish a DTLS association with
@@ -546,6 +554,13 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
       party is active MUST initiate a DTLS handshake by sending a
       ClientHello over each flow (host/port quartet).
 
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 10]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
    o  The endpoint MUST NOT use the connection attribute defined in
       [RFC4145].
 
@@ -553,14 +568,6 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
       specified in [RFC4572].
 
    o  The certificate presented during the DTLS handshake MUST match the
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 10]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
       fingerprint exchanged via the signaling path in the SDP.  The
       security properties of this mechanism are described in Section 8.
 
@@ -595,28 +602,25 @@ NEW TEXT:
 
    The offer/answer model, defined in [RFC3264], is used by protocols
    like the Session Initiation Protocol (SIP) [RFC3261] to set up
-   multimedia sessions.  In addition to the usual contents of an SDP
-   [RFC4566] message, each media description ("m=" line and associated
-   parameters) will also contain several attributes as specified in
-   [RFC5764], [RFC4145], and [RFC4572].
+   multimedia sessions.
 
    When an endpoint wishes to set up a secure media session with another
    endpoint, it sends an offer in a SIP message to the other endpoint.
    This offer includes, as part of the SDP payload, the fingerprint of
    the certificate that the endpoint wants to use.  The endpoint SHOULD
    send the SIP message containing the offer to the offerer's SIP proxy
-   over an integrity protected channel.  The proxy SHOULD add an
-   Identity header field according to the procedures outlined in
-   [RFC4474].  The SIP message containing the offer SHOULD be sent to
-   the offerer's SIP proxy over an integrity protected channel.  When
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                 [Page 11]
+Holmberg & Shpount        Expires May 14, 2016                 [Page 11]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 
+   over an integrity protected channel.  The proxy SHOULD add an
+   Identity header field according to the procedures outlined in
+   [RFC4474].  The SIP message containing the offer SHOULD be sent to
+   the offerer's SIP proxy over an integrity protected channel.  When
    the far endpoint receives the SIP message, it can verify the identity
    of the sender using the Identity header field.  Since the Identity
    header field is a digital signature across several SIP header fields,
@@ -649,51 +653,26 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    signaling path is only used to verify the peers' certificate
    fingerprints.
 
-   The offer and answer MUST conform to the following requirements.
-
-   o  The endpoint MUST use the setup attribute defined in [RFC4145].
-      The endpoint that is the offerer MUST use the setup attribute
-      value of setup:actpass and be prepared to receive a client_hello
-      before it receives the answer.  The answerer MUST use either a
-      setup attribute value of setup:active or setup:passive.  Note that
-      if the answerer uses setup:passive, then the DTLS handshake will
-      not begin until the answerer is received, which adds additional
-      latency. setup:active allows the answer and the DTLS handshake to
-      occur in parallel.  Thus, setup:active is RECOMMENDED.  Whichever
-      party is active MUST initiate a DTLS handshake by sending a
-      ClientHello over each flow (host/port quartet).
-
-   o  The endpoint MUST NOT use the connection attribute defined in
-      [RFC4145].
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 12]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
-   o  The endpoint MUST use the certificate fingerprint attribute as
-      specified in [RFC4572].
-
-   o  The certificate presented during the DTLS handshake MUST match the
-      fingerprint exchanged via the signaling path in the SDP.  The
-      security properties of this mechanism are described in Section 8.
-
-   o  If the fingerprint does not match the hashed certificate, then the
-      endpoint MUST tear down the media session immediately.  Note that
-      it is permissible to wait until the other side's fingerprint has
-      been received before establishing the connection; however, this
-      may have undesirable latency effects.
+   The offerer and answerer MUST follow the SDP offer/answer procedures
+   defined in [RFCXXXX].
 
 
 Update to section 6.6:
+----------------------
 
 OLD TEXT:
 
 6.6.  Session Modification
 
    Once an answer is provided to the offerer, either endpoint MAY
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 12]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
    request a session modification that MAY include an updated offer.
    This session modification can be carried in either an INVITE or
    UPDATE request.  The peers can reuse the existing associations if
@@ -711,30 +690,66 @@ NEW TEXT:
    Once an answer is provided to the offerer, either endpoint MAY
    request a session modification that MAY include an updated offer.
    This session modification can be carried in either an INVITE or
-   UPDATE request.  The peers can reuse the existing associations if
-   they are compatible (i.e., they have the same key fingerprints and
-   transport parameters), or establish a new one following the same
-   rules are for initial exchanges, tearing down the existing
-   association as soon as the offer/answer exchange is completed.  Note
-   that if the active/passive status of the endpoints changes, a new
-   connection MUST be established.
+   UPDATE request. The peers can reuse an existing DTLS association,
+   or establish a new one, following the procedures in [RFCXXXX].
+
+Update to section 6.7.1:
+------------------------
+
+OLD TEXT:
+
+6.7.1.  ICE Interaction
+
+   Interactive Connectivity Establishment (ICE), as specified in
+   [RFC5245], provides a methodology of allowing participants in
+   multimedia sessions to verify mutual connectivity.  When ICE is being
+   used, the ICE connectivity checks are performed before the DTLS
+   handshake begins.  Note that if aggressive nomination mode is used,
+   multiple candidate pairs may be marked valid before ICE finally
+   converges on a single candidate pair.  Implementations MUST treat all
+   ICE candidate pairs associated with a single component as part of the
+   same DTLS association.  Thus, there will be only one DTLS handshake
+   even if there are multiple valid candidate pairs.  Note that this may
+   mean adjusting the endpoint IP addresses if the selected candidate
+   pair shifts, just as if the DTLS packets were an ordinary media
+   stream.
+
+   Note that Simple Traversal of the UDP Protocol through NAT (STUN)
+   packets are sent directly over UDP, not over DTLS.  [RFC5764]
+   describes how to demultiplex STUN packets from DTLS packets and SRTP
+   packets.
+
+NEW TEXT:
 
 
 
 
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 13]
+Holmberg & Shpount        Expires May 14, 2016                 [Page 13]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
+6.7.1.  ICE Interaction
+
+   The Interactive Connectivity Establishment (ICE) [RFC5245]
+   considerations for DTLS-protected media are described in
+   [RFCXXXX].
+
+   Note that Simple Traversal of the UDP Protocol through NAT (STUN)
+   packets are sent directly over UDP, not over DTLS.  [RFC5764]
+   describes how to demultiplex STUN packets from DTLS packets and SRTP
+   packets.
 
 
 9.3.  Update to RFC 7345
 
 
 Update to section 4:
+--------------------
 
 OLD TEXT:
+
+4.  SDP Offerer/Answerer Procedures
 
 4.1.  General
 
@@ -762,6 +777,14 @@ OLD TEXT:
    [RFC4145].
 
    If the endpoint supports, and is willing to use, a cipher suite with
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 14]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
    an associated certificate, the endpoint MUST include an SDP
    "fingerprint" attribute [RFC4572].  The endpoint MUST support SHA-256
    for generating and verifying the SDP "fingerprint" attribute value.
@@ -777,14 +800,6 @@ OLD TEXT:
    handshake MUST match the fingerprint received in the SDP
    "fingerprint" attribute.  If the fingerprint does not match the
    hashed certificate, then the endpoint MUST tear down the media
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 14]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
    session immediately.  Note that it is permissible to wait until the
    other side's fingerprint has been received before establishing the
    connection; however, this may have undesirable latency effects.
@@ -818,6 +833,14 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 4.4.  Offerer Processing of the Answer
 
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 15]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
    When the offerer receives an SDP answer, if the offerer ends up being
    active it MUST initiate a DTLS handshake by sending a DTLS
    ClientHello message on the negotiated media stream, towards the IP
@@ -833,124 +856,64 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    the endpoints can negotiate and create a new DTLS association and,
    once created, delete the previous DTLS association, following the
    same rules for the initial offer/answer exchange.  Each endpoint
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 15]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
    needs to be prepared to receive data on both the new and old DTLS
    associations as long as both are alive.
 
 NEW TEXT:
 
-4.1.  General
+4.  SDP Offerer/Answerer Procedures
 
    An endpoint (i.e., both the offerer and the answerer) MUST create an
    SDP media description ("m=" line) for each UDPTL-over-DTLS media
    stream and MUST assign a UDP/TLS/UDPTL value (see Table 1) to the
    "proto" field of the "m=" line.
 
-   The procedures in this section apply to an "m=" line associated with
-   a UDPTL-over-DTLS media stream.
+   The offerer and answerer MUST follow the SDP offer/answer procedures
+   defined in [RFCXXXX] in order to negotiate the DTLS association
+   associated with the UDPTL-over-DTLS media stream. In addition,
+   the offerer and answerer MUST use the SDP attributes defined for
+   UDPTL over UDP, as defined in [ITU.T38.2010].
 
-   In order to negotiate a UDPTL-over-DTLS media stream, the following
-   SDP attributes are used:
 
-   o  The SDP attributes defined for UDPTL over UDP, as described in
-      [ITU.T38.2010]; and
+Update to section 5.2.1:
+------------------------
 
-   o  The SDP attributes, defined in [RFC4145] and [RFC4572], as
-      described in this section.
+OLD TEXT:
 
-   The endpoint MUST NOT use the SDP "connection" attribute [RFC4145].
+5.2.1.  ICE Usage
 
-   In order to negotiate the TLS roles for the UDPTL-over-DTLS transport
-   connection, the endpoint MUST use the SDP "setup" attribute
-   [RFC4145].
-
-   If the endpoint supports, and is willing to use, a cipher suite with
-   an associated certificate, the endpoint MUST include an SDP
-   "fingerprint" attribute [RFC4572].  The endpoint MUST support SHA-256
-   for generating and verifying the SDP "fingerprint" attribute value.
-   The use of SHA-256 is preferred.  UDPTL over DTLS, at a minimum, MUST
-   support TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 and MUST support
-   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.  UDPTL over DTLS MUST prefer
-   TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and any other Perfect Forward
-   Secrecy (PFS) cipher suites over non-PFS cipher suites.
-   Implementations SHOULD disable TLS-level compression.
-
-   If a cipher suite with an associated certificate is selected during
-   the DTLS handshake, the certificate received during the DTLS
-   handshake MUST match the fingerprint received in the SDP
-   "fingerprint" attribute.  If the fingerprint does not match the
-   hashed certificate, then the endpoint MUST tear down the media
-   session immediately.  Note that it is permissible to wait until the
-   other side's fingerprint has been received before establishing the
+   When Interactive Connectivity Establishment (ICE) [RFC5245] is being
+   used, the ICE connectivity checks are performed before the DTLS
+   handshake begins.  Note that if aggressive nomination mode is used,
+   multiple candidate pairs may be marked valid before ICE finally
+   converges on a single candidate pair.  User Agents (UAs) MUST treat
+   all ICE candidate pairs associated with a single component as part of
+   the same DTLS association.  Thus, there will be only one DTLS
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                 [Page 16]
+Holmberg & Shpount        Expires May 14, 2016                 [Page 16]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
 
 
-   connection; however, this may have undesirable latency effects.
-
-4.2.  Generating the Initial Offer
-
-   The offerer SHOULD assign the SDP "setup" attribute with a value of
-   "actpass", unless the offerer insists on being either the sender or
-   receiver of the DTLS ClientHello message, in which case the offerer
-   can use either a value of "active" (the offerer will be the sender of
-   ClientHello) or "passive" (the offerer will be the receiver of
-   ClientHello).  The offerer MUST NOT assign an SDP "setup" attribute
-   with a "holdconn" value.
-
-   If the offerer assigns the SDP "setup" attribute with a value of
-   "actpass" or "passive", the offerer MUST be prepared to receive a
-   DTLS ClientHello message before it receives the SDP answer.
-
-4.3.  Generating the Answer
-
-   If the answerer accepts the offered UDPTL-over-DTLS transport
-   connection, in the associated SDP answer, the answerer MUST assign an
-   SDP "setup" attribute with a value of either "active" or "passive",
-   according to the procedures in [RFC4145].  The answerer MUST NOT
-   assign an SDP "setup" attribute with a value of "holdconn".
-
-   If the answerer assigns an SDP "setup" attribute with a value of
-   "active" value, the answerer MUST initiate a DTLS handshake by
-   sending a DTLS ClientHello message on the negotiated media stream,
-   towards the IP address and port of the offerer.
-
-4.4.  Offerer Processing of the Answer
-
-   When the offerer receives an SDP answer, if the offerer ends up being
-   active it MUST initiate a DTLS handshake by sending a DTLS
-   ClientHello message on the negotiated media stream, towards the IP
-   address and port of the answerer.
-
-4.5.  Modifying the Session
-
-   Once an offer/answer exchange has been completed, either endpoint MAY
-   send a new offer in order to modify the session.  The endpoints can
-   reuse the existing DTLS association if the key fingerprint values and
-   transport parameters indicated by each endpoint are unchanged.
-   Otherwise, following the rules for the initial offer/answer exchange,
-   the endpoints can negotiate and create a new DTLS association and,
-   once created, delete the previous DTLS association, following the
-   same rules for the initial offer/answer exchange.  Each endpoint
-   needs to be prepared to receive data on both the new and old DTLS
-   associations as long as both are alive.
+   handshake even if there are multiple valid candidate pairs.  Note
+   that this may mean adjusting the endpoint IP addresses if the
+   selected candidate pair shifts, just as if the DTLS packets were an
+   ordinary media stream.  In the case of an ICE restart, the DTLS
+   handshake procedure is repeated, and a new DTLS association is
+   created.  Once the DTLS handshake is completed and the new DTLS
+   association has been created, the previous DTLS association is
+   deleted.
 
 
+NEW TEXT:
 
-Holmberg & Shpount        Expires May 10, 2016                 [Page 17]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+5.2.1.  ICE Usage
+
+   The Interactive Connectivity Establishment (ICE) [RFC5245]
+   considerations for DTLS-protected media are described in
+   [RFCXXXX].
 
 
 10.  Security Considerations
@@ -979,6 +942,17 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
        Contact name: Christer Holmberg
 
 
+
+
+
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 17]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
+
 12.  Acknowledgements
 
    Thanks to Justin Uberti, Martin Thomson, Paul Kyzivat and Jens
@@ -995,19 +969,14 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    o  - Additional SDP offer/answer procedures, related to certificates,
       added.
 
+   o  - Updates to RFC 5763 and RFC 7345 added.
+
    Changes from draft-ietf-mmusic-sdp-dtls-00
 
    o  - SDP 'connection' attribute replaced with new 'dtls-connection'
       attribute.
 
    o  - IANA Considerations added.
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 18]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
 
    o  - E-mail regarding 'dtls-connection-id' attribute added as Annex.
 
@@ -1028,6 +997,17 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
    Changes from draft-holmberg-mmusic-sdp-dtls-00
 
    o  - Editorial changes and clarifications.
+
+
+
+
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 18]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
 
 14.  Normative References
 
@@ -1056,15 +1036,6 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
               Description Protocol", RFC 4566, DOI 10.17487/RFC4566,
               July 2006, <http://www.rfc-editor.org/info/rfc4566>.
 
-
-
-
-
-Holmberg & Shpount        Expires May 10, 2016                 [Page 19]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
-
-
    [RFC4572]  Lennox, J., "Connection-Oriented Media Transport over the
               Transport Layer Security (TLS) Protocol in the Session
               Description Protocol (SDP)", RFC 4572,
@@ -1081,6 +1052,18 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
               Traversal for Offer/Answer Protocols", RFC 5245,
               DOI 10.17487/RFC5245, April 2010,
               <http://www.rfc-editor.org/info/rfc5245>.
+
+
+
+
+
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 19]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLSNovember 2015
+
 
    [RFC5763]  Fischl, J., Tschofenig, H., and E. Rescorla, "Framework
               for Establishing a Secure Real-time Transport Protocol
@@ -1116,4 +1099,21 @@ Authors' Addresses
 
 
 
-Holmberg & Shpount        Expires May 10, 2016                 [Page 20]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Holmberg & Shpount        Expires May 14, 2016                 [Page 20]
