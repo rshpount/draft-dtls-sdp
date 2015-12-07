@@ -359,7 +359,18 @@
             ICE candidates.
         </t>
     </section>
-        
+    
+    <section title="Transport Protocol Considerations" anchor="sec-dtls-cons-trans">
+        <section title="Transport Re-Usage" anchor="sec-dtls-cons-trans-reuse">
+            <t>
+                If DTLS is transported on top of a connection-oriented transport protocol (e.g. TCP or SCTP),
+                where all IP packets are acknowledged, all DTLS packets associated with a previous
+                DTLS association MUST be acknowledged (or timed out) before a new DTLS association
+                can be established on the same transport.
+            </t>
+        </section>
+    </section>
+    
     <section title="SIP Considerations">
         <t>
             When the Session Initiation Protocol (SIP) <xref format="default" pageno="false" 
@@ -839,6 +850,7 @@ NEW TEXT:
                 <t>- Annex regarding 'dtls-connection-id' attribute removed.</t>
                 <t>- Additional SDP offer/answer procedures, related to certificates, added.</t>
                 <t>- Updates to RFC 5763 and RFC 7345 added.</t>
+                <t>- Transport protocol considerations added.</t>
 			</list>
 		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-00
