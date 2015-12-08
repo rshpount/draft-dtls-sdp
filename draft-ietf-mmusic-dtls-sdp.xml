@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-02.txt" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-03.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -845,6 +845,11 @@ NEW TEXT:
 		
 	<section title="Change Log">	
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-02
+			<list style="symbols">
+                <t>- Updated RFCs added to boilerplate.</t>
+			</list>
+		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-01
 			<list style="symbols">
                 <t>- Annex regarding 'dtls-connection-id' attribute removed.</t>
