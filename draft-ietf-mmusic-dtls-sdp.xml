@@ -4,11 +4,9 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-03.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-latest" updates="5763,7315" submissionType="IETF" xml:lang="en">
   <front>
-    <title>
-		Using the SDP Offer/Answer Mechanism for DTLS
-	</title>
+    <title>Using the SDP Offer/Answer Mechanism for DTLS</title>
     <author fullname="Christer Holmberg" initials="C.H." surname="Holmberg">
         <organization abbrev="Ericsson">Ericsson</organization>
         <address>
