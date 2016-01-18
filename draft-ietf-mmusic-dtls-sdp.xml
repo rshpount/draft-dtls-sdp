@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-03.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-04.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -38,7 +38,7 @@
         </address>
     </author>
 
-    <date year="2015" />
+    <date year="2016" />
     <area>RAI</area>
     <abstract>
 		<t>
@@ -78,12 +78,6 @@
                 is to be established/re-established. The attribute can be used both with and without ICE.
             </t>
     </section>
-
-	<section title="Abbreviations" toc="default">
-		<t>
-            TBD		
-        </t>
-	</section>
 		
     <section title="Conventions">
 		<t>
@@ -115,6 +109,11 @@
                 This draft adds the support for explicit signaling.                
             </t>
             <t>
+                Whenever an entity determines, based on the criteria above, that a new DTLS association 
+                is the entity MUST initiate an associated SDP offer/answer transaction, following to the 
+                procedures in <xref target="sec-oa"/>.
+            </t>
+            <t>
                 The sections below describe typical cases where a new DTLS association needs to be established.
             </t>            
         </section>
@@ -141,44 +140,51 @@
         </section>
     </section>
 	<section title="SDP dtls-connection Attribute" anchor="sec-dcon-attr">
-        <section title="General">
-            <t>
-                The SDP 'connection' attribute <xref format="default" pageno="false" target="RFC4145"/> 
-                was originally defined for connection-oriented protocols, e.g. TCP and TLS. This section 
-                defines a similar attribute, 'dtls-connection', to be used with DTLS.
-            </t>
-            <t>
-                A 'dtls-connection' attribute value of 'new' indicates that a new DTLS association MUST be
-                established. A 'dtls-connection' attribute value of 'existing' indicates that a new DTLS
-                association MUST NOT be established.
-            </t>
-            <t>
-                Unlike the SDP 'connection' attribute for TLS, there is no default value defined
-                for the 'dtls-connection' attribute. Implementations that wish to use the attribute 
-                MUST explicitly include it in SDP offers and answers. If an offer or answer does 
-                not contain an attribute, other means needs to be used in order for endpoints to 
-                determine whether an offer or answer is associated with an event that requires the 
-                DTLS association to be re-established.
-            </t>
-            <t>
-                The SDP Offer/Answer <xref format="default" pageno="false" target="RFC3264"/> 
-                procedures associated with the attribute are defined in <xref target="sec-oa"/>
-            </t>
-        </section>
-        <section title="ABNF">
-        	<t>
-				The ABNF <xref format="default" pageno="false" target="RFC5234"/> 
-				grammar for the SDP 'dtls-connection' attributes is:
-			</t>
-			<figure>
-				<artwork align="left"><![CDATA[
-                        
-    dtls-connection-attr   = "a=dtls-connection:" conn-value
-    conn-value             = "new" / "existing"
-        
-				]]></artwork>
-			</figure>
-        </section>                 
+        <t>
+            The SDP 'connection' attribute <xref format="default" pageno="false" target="RFC4145"/> 
+            was originally defined for connection-oriented protocols, e.g. TCP and TLS. This section 
+            defines a similar attribute, 'dtls-connection', to be used with DTLS.
+        </t>
+        <figure>
+		    <artwork align="left"><![CDATA[
+
+       Name: dtls-connection
+
+       Value: conn-value
+
+       Usage Level: media
+
+       Charset Dependent: no
+
+       Syntax:
+
+           conn-value = "new" / "existing"
+
+       Example:
+
+           a=dtls-connection:existing
+           
+           	]]></artwork>
+		</figure>
+        <t>
+            A 'dtls-connection' attribute value of 'new' indicates that a new
+            DTLS association MUST be established. A 'dtls-connection' attribute
+            value of 'existing' indicates that a new DTLS association MUST NOT be
+            established.
+        </t>
+        <t>
+            Unlike the SDP 'connection' attribute for TLS, there is no default
+            value defined for the 'dtls-connection' attribute.  Implementations
+            that wish to use the attribute MUST explicitly include it in SDP
+            offers and answers. If an offer or answer does not contain an
+            attribute, other means needs to be used in order for endpoints to
+            determine whether an offer or answer is associated with an event that
+            requires the DTLS association to be re-established.
+        </t>
+        <t>
+            The SDP Offer/Answer <xref format="default" pageno="false" target="RFC3264"/> 
+            procedures associated with the attribute are defined in <xref target="sec-oa"/>
+        </t>
     </section>
     
     <section title="SDP Offer/Answer Procedures" anchor="sec-oa">
@@ -190,9 +196,10 @@
                 of this specification, and needs to be specified in a usage specific specification.
             </t>
             <t>
-                NOTE: The procedures in this section are based on the procedures for SRTP-DTLS
-                <xref format="default" pageno="false" target="RFC5763"/>, with the addition
-                of usage of the SDP 'dtls-connection' attribute.
+                NOTE: The procedures in this section are generalizations of procedures first 
+                specified in SRTP-DTLS <xref format="default" pageno="false" target="RFC5763"/>, 
+                with the addition of usage of the SDP 'dtls-connection' attribute. That document is
+                herein revised to make use of these new procedures.
             </t>
 			<t>
                 The procedures in this section apply to an SDP media description ("m=" line) associated 
@@ -223,7 +230,7 @@
                 when negotiating a DTLS association.
 			</t>
             <t>
-                NOTE: The SDP 'connection' attribute may be used if the usage
+                The SDP 'connection' attribute MAY be used if the usage
                 is associated with another protocol layer, e.g. SCTP or TCP, used
                 together with DTLS.
             </t>
@@ -232,6 +239,8 @@
                 SDP 'setup' attribute 'holdconn' value when negotiating a DTLS association.
             </t>
             <t>
+                Endpoints MUST support the algorithms defined in ****
+            
                 Endpoints MUST support SHA-256 for generating and verifying the fingerprint
                 value associated with the DTLS association. The use of SHA-256 is preferred. 
             </t>
@@ -305,9 +314,10 @@
         <section title="Offerer Processing of the SDP Answer">
             <t>
                 When an offerer receives an answer that contains an SDP 'dtls-connection' attribute with 
-                a 'new' value, and if the offerer becomes DTLS client, the offerer MUST establish  
-                a DTLS association. If the offerer becomes DTLS server, it MUST wait for the answerer to 
-                establish the DTLS association.
+                a 'new' value, and if the offerer becomes DTLS client (based on the value of the SDP 'setup'
+                attribute value <xref format="default" pageno="false" target="RFC4145"/>), the offerer MUST 
+                establish a DTLS association. If the offerer becomes DTLS server, it MUST wait for the answerer 
+                to establish the DTLS association.
             </t>
             <t>
                 If the answer contains an SDP 'dtls-connection' attribute with an 'existing' value, the offerer 
@@ -405,7 +415,7 @@
 
 Update to section 5:
 --------------------                
-                
+
 OLD TEXT:
 
 5.  Establishing a Secure Channel
@@ -814,15 +824,14 @@ NEW TEXT:
 	</section>
 	
 	<section anchor="section.iana" title="IANA Considerations">
-        <section anchor="section.iana.attr" title="Registration of New SDP Attribute">
-            <t>
-                This document updates the "Session Description Protocol Parameters" registry 
-                as specified in Section 8.2.2 of <xref target="RFC4566" pageno="false" format="default"/>.
-                Specifically, it adds the SDP attributes in <xref target="section.iana.attr" 
-                pageno="false" format="default"/> to the table for SDP media level attributes.
-            </t>
-            <figure>
-				<artwork align="left"><![CDATA[
+        <t>
+            This document updates the "Session Description Protocol Parameters" registry 
+            as specified in Section 8.2.2 of <xref target="RFC4566" pageno="false" format="default"/>.
+            Specifically, it adds the SDP dtls-connection attribute to the table for SDP 
+            media level attributes.
+        </t>
+        <figure>
+			<artwork align="left"><![CDATA[
 
     Attribute name: dtls-connection
     Type of attribute: media-level
@@ -831,9 +840,8 @@ NEW TEXT:
     Appropriate Values: see Section X
     Contact name: Christer Holmberg
     
-				]]></artwork>
-			</figure>
-        </section>
+			]]></artwork>
+		</figure>        
 	</section>
                    
 	<section title="Acknowledgements">
@@ -845,6 +853,17 @@ NEW TEXT:
 		
 	<section title="Change Log">	
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-03
+			<list style="symbols">
+                <t>Changes based on comments from Paul Kyzivat:</t>
+                <t>- Modification of dtls-connection attribute section.</t>
+                <t>- Removal of IANA considerations subsection.</t>
+                <t>- Making note into normative text in o/a section.</t>
+                <t>Changes based on comments from Martin Thompson:</t>
+                <t>- Abbreviations section removed.</t>
+                <t>- Clarify that a new DTLS association requires a new o/a transaction.</t>
+			</list>
+		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-02
 			<list style="symbols">
                 <t>- Updated RFCs added to boilerplate.</t>
