@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-04.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-05.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -110,7 +110,7 @@
             </t>
             <t>
                 Whenever an entity determines, based on the criteria above, that a new DTLS association 
-                is the entity MUST initiate an associated SDP offer/answer transaction, following to the 
+                is required, the entity MUST initiate an associated SDP offer/answer transaction, following to the 
                 procedures in <xref target="sec-oa"/>.
             </t>
             <t>
@@ -239,8 +239,6 @@
                 SDP 'setup' attribute 'holdconn' value when negotiating a DTLS association.
             </t>
             <t>
-                Endpoints MUST support the algorithms defined in ****
-            
                 Endpoints MUST support SHA-256 for generating and verifying the fingerprint
                 value associated with the DTLS association. The use of SHA-256 is preferred. 
             </t>
@@ -853,6 +851,11 @@ NEW TEXT:
 		
 	<section title="Change Log">	
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-04
+			<list style="symbols">
+                <t>Editorial nits fixed based on comments from Paul Kyzivat:</t>
+			</list>
+		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-03
 			<list style="symbols">
                 <t>Changes based on comments from Paul Kyzivat:</t>
