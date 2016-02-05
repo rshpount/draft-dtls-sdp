@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-05.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-06.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -322,6 +322,14 @@
                 will continue using the previously established DTLS association. It is considered an error 
                 case if the answer contains a 'dtls-connection' attribute with an 'existing' value, and a DTLS 
                 association does not exist.
+            </t>
+            <t>
+                An offerer needs to be able to handle error conditions that can occur during an offer/answer
+                transaction, e.g. if an answer contains an SDP 'dtls-connection' attribute with an 'existing' value even
+                if no DTLS connection exists, or if the answer contains a new fingerprint value for an existing DTLS connection. 
+                If such error case occurs, the offerer SHOULD terminate the associated DTLS connection (if it exists) and send
+                a new offer in order to terminate each media stream using the DTLS association, by setting the associated
+                port value to zero <xref format="default" pageno="false" target="RFC4145"/>.
             </t>
         </section>
         <section title="Modifying the Session">
@@ -851,6 +859,11 @@ NEW TEXT:
 		
 	<section title="Change Log">	
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-05
+			<list style="symbols">
+                <t>Text on handling offer/answer error conditions added.</t>
+			</list>
+		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-04
 			<list style="symbols">
                 <t>Editorial nits fixed based on comments from Paul Kyzivat:</t>
