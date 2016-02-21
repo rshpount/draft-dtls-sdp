@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-07.txt" updates="5763,7315" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-08.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -870,6 +870,11 @@ NEW TEXT:
 		
 	<section title="Change Log">	
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-07
+			<list style="symbols">
+                <t>Reference to RFC 7315 replaced with reference to RFC 7345.</t>
+			</list>
+		</t>		
         <t>Changes from draft-ietf-mmusic-sdp-dtls-06
 			<list style="symbols">
                 <t>Text on restrictions regarding spanning a DTLS connection over multiple transports added.</t>
@@ -951,7 +956,7 @@ NEW TEXT:
         <?rfc include="reference.RFC.5234"?>
         <?rfc include="reference.RFC.5245"?>
         <?rfc include="reference.RFC.5763"?>
-        <?rfc include="reference.RFC.7315"?>
+        <?rfc include="reference.RFC.7345"?>
     </references>    
     <references title="Informative References">
         <?rfc include="reference.RFC.5576"?>
