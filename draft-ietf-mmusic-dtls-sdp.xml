@@ -299,13 +299,13 @@
         </section>
         <section title="Generating the Answer">
             <t>
-                If an answerer receives an offer that establishes a new SDP session, or an offer in which
-                any of the fingerprint values changed, or any fingerprints where added or removed, or DTLS 
-                setup role changed, or SDP 'dtls-association-id' attribute was added or new value of 
-                SDP 'dtls-association-id' attribute was specified, answerer MUST establish a new DTLS association.
-                If an offer with the same fingerprint values, setup role, and SDP 'dtls-association-id' attribute
-                was received in existing SDP session, answerer can reuse an existing DTLS association or it 
-                can choose to establish a new DTLS association.
+                If an answerer receives an offer and no previous DTLS association existed, or an offer in which
+                any of the fingerprint values changed, or any fingerprints where added or removed, or which caused
+                the negotiated DTLS setup role to change, or SDP 'dtls-association-id' attribute was added or new 
+                value of SDP 'dtls-association-id' attribute was specified, answerer MUST establish a new DTLS association.
+                If an offer was received with the same fingerprint and SDP 'dtls-association-id' attribute values,
+                and which did not change the negotiated DTLS setup role, the answerer can reuse this existing
+                DTLS association or it can choose to establish a new DTLS association.
             </t>
             <t>
                 If answerer needs to establish a new DTLS association, it MUST guarantee that combination of
