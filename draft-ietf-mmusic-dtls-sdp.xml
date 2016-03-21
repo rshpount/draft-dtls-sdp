@@ -293,7 +293,7 @@
                 if ICE is used, which were not recently used for any other DTLS association.
             </t>
             <t>
-                The offerer offerer MUST be prepared to receive a DTLS ClientHello message (if a new DTLS association
+                The offerer MUST be prepared to receive a DTLS ClientHello message (if a new DTLS association
                 is established by the answerer) from the answerer before it receives the SDP answer.
             </t>
         </section>
@@ -389,7 +389,7 @@
                 a new DTLS association, and if a previously established DTLS association exists, the
                 offerer MUST insert the SDP 'dtls-association-id' attribute and fingerprint values
                 set to the same values as previously sent values for these attributes, and the SDP 'setup'
-                attribute set to the previously negotiated role for this DTLS association, in the answer.
+                attribute set to the previously negotiated role for this DTLS association, in the offer.
             </t>
             <t>
                 NOTE: When a new DTLS association is established, each endpoint needs to be prepared to receive
