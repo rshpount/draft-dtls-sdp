@@ -445,7 +445,7 @@
             <t>
                 Unless explicitly prohibited by underlying transport DTLS association 
                 can span across transport changes. If fingerprints, SDP 'dtls-association-id',
-                and negotiated role remain the same, exisitng DTLS association continues
+                and negotiated role remain the same, existing DTLS association continues
                 even if underlying transport 5-tuple changes or ICE session is restarted.
             </t>
         </section>
@@ -462,7 +462,7 @@
         </t>
         <t>
             It is possible to send an INVITE request which does not contain an SDP offer. Such
-            INVITE request is often referred to as an 'empty INVITE', or an 'offerless INVITE'.
+            INVITE request is often referred to as an 'empty INVITE', or an 'offer-less INVITE'.
             The receiving endpoint will include the SDP offer in a response associated with the
             response. When the endpoint generates such SDP offer, if a previously established
             DTLS association exists, the offerer SHOULD insert the SDP 'dtls-association-id' 
@@ -653,7 +653,7 @@
         </figure>
     </section>
 
-    <section title="Acknowledgements">
+    <section title="Acknowledgments">
         <t>
             Thanks to Justin Uberti, Martin Thomson, Paul Kyzivat, Jens Guballa,
             Charles Eckel and Gonzalo Salgueiro for providing comments and
