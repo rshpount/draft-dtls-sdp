@@ -280,8 +280,8 @@
                 When the offerer sends the initial offer, and the offerer wants to establish a 
                 DTLS association, it MUST guarantee that combination of fingerprint values and 
                 the SDP 'dtls-association-id' attribute value is unique across all the DTLS associations.
-                If the end point generates a new temporary self signed certificate for each new DTLS association,
-                it can omit the SDP 'dtls-association-id' attribute. If the end point is reusing certificates
+                If the offerer generates a new temporary self signed certificate for each new DTLS association,
+                it can omit the SDP 'dtls-association-id' attribute. If the offerer is reusing certificates
                 across multiple DTLS associations, the offer MUST include the SDP 'dtls-association-id' attribute
                 set to a value unique across all the DTLS associations established using these certificates. One 
                 way to generate such unique value for SDP 'dtls-association-id' attribute is to use
@@ -313,8 +313,8 @@
             <t>
                 If answerer needs to establish a new DTLS association, it MUST guarantee that combination of
                 fingerprint values and the SDP 'dtls-association-id' attribute value is unique across all the
-                DTLS associations. If the end point generates a new temporary self signed certificate for each 
-                new DTLS association, it can omit the SDP 'dtls-association-id' attribute. If the end point is
+                DTLS associations. If the answerer generates a new temporary self signed certificate for each 
+                new DTLS association, it can omit the SDP 'dtls-association-id' attribute. If the answerer is
                 reusing certificates across multiple DTLS associations, the answer MUST include the SDP
                 'dtls-association-id' attribute set to a value unique across all the DTLS associations established
                 using these certificates. One way to generate such unique value for SDP 'dtls-association-id'
