@@ -1,16 +1,15 @@
 
 
 
-
 Network Working Group                                        C. Holmberg
 Internet-Draft                                                  Ericsson
 Updates: 5763,7345 (if approved)                              R. Shpount
 Intended status: Standards Track                             TurboBridge
-Expires: November 20, 2016                                  May 19, 2016
+Expires: November 22, 2016                                  May 21, 2016
 
 
              Using the SDP Offer/Answer Mechanism for DTLS
-                   draft-ietf-mmusic-dtls-sdp-11.txt
+                   draft-ietf-mmusic-dtls-sdp-12.txt
 
 Abstract
 
@@ -18,8 +17,7 @@ Abstract
    and establishing a DTLS association.  The draft also defines the
    criteria for when a new DTLS association must be established.
 
-   This draft defines a new SDP media-level attribute, 'dtls-
-   association-id'.
+   This draft defines a new SDP media-level attribute, 'dtls-id'.
 
 Status of This Memo
 
@@ -36,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 20, 2016.
+   This Internet-Draft will expire on November 22, 2016.
 
 Copyright Notice
 
@@ -53,7 +51,8 @@ Copyright Notice
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 1]
+
+Holmberg & Shpount      Expires November 22, 2016               [Page 1]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -69,7 +68,7 @@ Table of Contents
      3.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   3
      3.2.  Change of Local Transport Parameters  . . . . . . . . . .   4
      3.3.  Change of ICE ufrag value . . . . . . . . . . . . . . . .   4
-   4.  SDP dtls-association-id Attribute . . . . . . . . . . . . . .   4
+   4.  SDP dtls-id Attribute . . . . . . . . . . . . . . . . . . . .   4
    5.  SDP Offer/Answer Procedures . . . . . . . . . . . . . . . . .   5
      5.1.  General . . . . . . . . . . . . . . . . . . . . . . . . .   5
      5.2.  Generating the Initial SDP Offer  . . . . . . . . . . . .   7
@@ -109,7 +108,7 @@ Table of Contents
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 2]
+Holmberg & Shpount      Expires November 22, 2016               [Page 2]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -122,10 +121,10 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    established, but currently there is no way to explicitly indicate in
    an SDP offer or answer whether a new DTLS association is required.
    To solve that problem, this draft defines a new SDP attribute, 'dtls-
-   association-id'.  The attribute contains a unique value associated
-   with a DTLS association, and by providing a new value in SDP offers
-   and answers the attribute can be used to indicate whether a new DTLS
-   association is to be established/re-established.
+   id'.  The attribute contains a unique value associated with a DTLS
+   association, and by providing a new value in SDP offers and answers
+   the attribute can be used to indicate whether a new DTLS association
+   is to be established/re-established.
 
 2.  Conventions
 
@@ -165,7 +164,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 3]
+Holmberg & Shpount      Expires November 22, 2016               [Page 3]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -175,29 +174,28 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    If an endpoint modifies its local transport parameters (address and/
    or port), and if the modification requires a new DTLS association,
    the endpoint MUST change its DTLS role, change its fingerprint value,
-   and/or use the SDP 'dtls-association-id' attribute with a new value
-   Section 4.
+   and/or use the SDP 'dtls-id' attribute with a new value Section 4.
 
    If the underlying transport explicitly prohibits a DTLS association
    to span multiple transports, and if the transport is changed, a new
-   value MUST be assigned to the the SDP 'dtls-association-id'
-   attribute.  An example of such case is when DTLS is carried over
-   SCTP, as described in [RFC6083].
+   value MUST be assigned to the the SDP 'dtls-id' attribute.  An
+   example of such case is when DTLS is carried over SCTP, as described
+   in [RFC6083].
 
 3.3.  Change of ICE ufrag value
 
    If an endpoint uses ICE, and modifies a local ufrag value, and if the
    modification requires a new DTLS association, the endpoint MUST
    either change its DTLS role, a fingerprint value and/or assign a new
-   value to the SDP 'dtls-association-id' attribute Section 4.
+   value to the SDP 'dtls-id' attribute Section 4.
 
-4.  SDP dtls-association-id Attribute
+4.  SDP dtls-id Attribute
 
-   The SDP 'dtls-association-id' attribute contains a unique value
-   associated with a DTLS association.
+   The SDP 'dtls-id' attribute contains a unique value associated with a
+   DTLS association.
 
 
-          Name: dtls-association-id
+          Name: dtls-id
 
           Value: conn-value
 
@@ -211,41 +209,42 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
           Example:
 
-              a=dtls-association-id:abc3dl
+              a=dtls-id:abc3dl
 
 
-   A 'dtls-association-id' attribute that contains a new value indicates
-   an intention to establish a new DTLS association.  A 'dtls-
-   association-id' attribute that contains a previously assigned value
-   indicates an intention to reuse an existing association.
+   A 'dtls-id' attribute that contains a new value indicates an
+   intention to establish a new DTLS association.  A 'dtls-id' attribute
+   that contains a previously assigned value indicates an intention to
+   reuse an existing association.
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 4]
+
+Holmberg & Shpount      Expires November 22, 2016               [Page 4]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
-   There is no default value defined for the SDP 'dtls-association-id'
-   attribute.  Implementations that wish to use the attribute MUST
-   explicitly include it in SDP offers and answers.  If an offer or
-   answer does not contain an attribute (this could happen if the
-   offerer or answerer represents an existing implementation that has
-   not been updated to support the attribute defined in this
-   specification or an implementation which allocates a new temporary
-   certificate for each association and uses change in fingerprint to
-   indicate new association), other means needs to be used in order for
-   endpoints to determine whether an offer or answer is associated with
-   an event that requires the DTLS association to be re-established.
+   There is no default value defined for the SDP 'dtls-id' attribute.
+   Implementations that wish to use the attribute MUST explicitly
+   include it in SDP offers and answers.  If an offer or answer does not
+   contain an attribute (this could happen if the offerer or answerer
+   represents an existing implementation that has not been updated to
+   support the attribute defined in this specification or an
+   implementation which allocates a new temporary certificate for each
+   association and uses change in fingerprint to indicate new
+   association), other means needs to be used in order for endpoints to
+   determine whether an offer or answer is associated with an event that
+   requires the DTLS association to be re-established.
 
    The mux category [I-D.ietf-mmusic-sdp-mux-attributes] for the 'dtls-
-   association-id' attribute is 'IDENTICAL', which means that the
-   attribute value must be identical across all media descriptions being
-   multiplexed [I-D.ietf-mmusic-sdp-bundle-negotiation].
+   id' attribute is 'IDENTICAL', which means that the attribute value
+   must be identical across all media descriptions being multiplexed
+   [I-D.ietf-mmusic-sdp-bundle-negotiation].
 
-   For RTP-based media, the 'dtls-association-id' attribute apply to
-   whole associated media description.  The attribute MUST NOT be
-   defined per source (using the SDP 'ssrc' attribute [RFC5576]).
+   For RTP-based media, the 'dtls-id' attribute apply to whole
+   associated media description.  The attribute MUST NOT be defined per
+   source (using the SDP 'ssrc' attribute [RFC5576]).
 
    The SDP offer/answer [RFC3264] procedures associated with the
    attribute are defined in Section 5
@@ -262,8 +261,8 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
    NOTE: The procedures in this section are generalizations of
    procedures first specified in SRTP-DTLS [RFC5763], with the addition
-   of usage of the SDP 'dtls-association-id' attribute.  That document
-   is herein revised to make use of these new procedures.
+   of usage of the SDP 'dtls-id' attribute.  That document is herein
+   revised to make use of these new procedures.
 
    The procedures in this section apply to an SDP media description
    ("m=" line) associated a DTLS-protected media/data.
@@ -277,7 +276,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 5]
+Holmberg & Shpount      Expires November 22, 2016               [Page 5]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -285,7 +284,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    candidates (see Section 6), which were not recently used for any
    other DTLS association.
 
-   When an answeer needs to esatblish a new DTLS association, if
+   When an answerer needs to establish a new DTLS association, if
    unreliable transport is used, and if the offerer did not allocate a
    new transport, the answerer MUST allocate a new transport for the
    offer in answer a way that it can disambiguate any packets associated
@@ -303,10 +302,10 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    o  The SDP 'fingerprint' attribute, defined in [RFC4572], is used to
       provide a fingerprint value; and
 
-   o  The SDP 'dtls-association-id' attribute, defined in this
-      specification, indicates a unique value associated with the DTLS
-      association.  The attribute value can be used to explicitly
-      indicate the intention of establishing a new DTLS association.
+   o  The SDP 'dtls-id' attribute, defined in this specification,
+      indicates a unique value associated with the DTLS association.
+      The attribute value can be used to explicitly indicate the
+      intention of establishing a new DTLS association.
 
    This specification does not define the usage of the SDP 'connection'
    attribute [RFC4145] for negotiating a DTLS connection.  However, the
@@ -333,7 +332,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 6]
+Holmberg & Shpount      Expires November 22, 2016               [Page 6]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -349,21 +348,21 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    SDP offerers and answerers might reuse certificates across multiple
    DTLS associations, and provide identical fingerprint values for each
    DTLS association.  It MUST be ensured that the combination of the
-   fingerprint values and the SDP 'dtls-association-id' attribute value
-   is unique across all DTLS associations.
+   fingerprint values and the SDP 'dtls-id' attribute value is unique
+   across all DTLS associations.
 
    If an SDP offerer or answerer generates a new temporary self-signed
    certificate for each new DTLS association, they can omit the SDP
-   'dtls-association-id' attribute.
+   'dtls-id' attribute.
 
 5.2.  Generating the Initial SDP Offer
 
    When the offerer sends the initial offer, and the offerer wants to
-   establish a DTLS association, it MUST insert an SDP 'dtls-
-   association-id' attribute with a new value in the offer.  In
-   addition, the offerer MUST insert an SDP 'setup' attribute according
-   to the procedures in [RFC4145], and one or more SDP 'fingerprint'
-   attributes according to the procedures in [RFC4572], in the offer.
+   establish a DTLS association, it MUST insert an SDP 'dtls-id'
+   attribute with a new value in the offer.  In addition, the offerer
+   MUST insert an SDP 'setup' attribute according to the procedures in
+   [RFC4145], and one or more SDP 'fingerprint' attributes according to
+   the procedures in [RFC4572], in the offer.
 
    If the offerer inserts the SDP 'setup' attribute with an 'actpass' or
    'passive' value, the offerer MUST be prepared to receive a DTLS
@@ -372,44 +371,41 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 5.3.  Generating the Answer
 
-   If an answerer receives an offer that contains an SDP 'dtls-
-   association-id' attribute with a new value, or if the answerer
-   receives an offer that contains an 'dtls-association-id' attribute
-   with a previously assigned value and the answerer determines (based
-   on the criteria for establishing a new DTLS association) that a new
-   DTLS association is to be established, the answerer MUST insert a new
-   value in the associated answer.  In addition, the answerer MUST
-   insert an SDP 'setup' attribute according to the procedures in
-   [RFC4145], and one or more SDP 'fingerprint' attributes according to
-   the procedures in [RFC4572], in the answer.
+   If an answerer receives an offer that contains an SDP 'dtls-id'
+   attribute with a new value, or if the answerer receives an offer that
+   contains an 'dtls-id' attribute with a previously assigned value and
+   the answerer determines (based on the criteria for establishing a new
+   DTLS association) that a new DTLS association is to be established,
+   the answerer MUST insert a new value in the associated answer.  In
+   addition, the answerer MUST insert an SDP 'setup' attribute according
+   to the procedures in [RFC4145], and one or more SDP 'fingerprint'
+   attributes according to the procedures in [RFC4572], in the answer.
 
-   If an answerer receives an offer that contains an SDP 'dtls-
-   association-id' attribute with a new value, and if the answerer does
-   not accept the establishment of a new DTLS association, the answerer
+   If an answerer receives an offer that contains an SDP 'dtls-id'
+   attribute with a new value, and if the answerer does not accept the
+   establishment of a new DTLS association, the answerer MUST reject the
+   "m=" lines associated with the suggested DTLS association [RFC3264].
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 7]
+Holmberg & Shpount      Expires November 22, 2016               [Page 7]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
-   MUST reject the "m=" lines associated with the suggested DTLS
-   association [RFC3264].
-
-   If an answerer receives an offer that contains a 'dtls-association-
-   id' attribute with a previously assigned value, and if the answerer
-   determines that a new DTLS association is not to be established, the
-   answerer MUST insert a 'dtls-association-id' attribute with the
-   previously assigned value in the associated answer.  In addition, the
-   answerer MUST insert an SDP 'setup' attribute with a value that does
-   not change the previously negotiated DTLS roles, and one or more SDP
-   'fingerprint' attributes values that do not change the previously
-   sent fingerprints, in the answer.
+   If an answerer receives an offer that contains a 'dtls-id' attribute
+   with a previously assigned value, and if the answerer determines that
+   a new DTLS association is not to be established, the answerer MUST
+   insert a 'dtls-id' attribute with the previously assigned value in
+   the associated answer.  In addition, the answerer MUST insert an SDP
+   'setup' attribute with a value that does not change the previously
+   negotiated DTLS roles, and one or more SDP 'fingerprint' attributes
+   values that do not change the previously sent fingerprints, in the
+   answer.
 
    If the answerer receives an offer that does not contain an SDP 'dtls-
-   association-id' attribute, the answerer MUST NOT insert a 'dtls-
-   association-id' attribute in the answer.
+   id' attribute, the answerer MUST NOT insert a 'dtls-id' attribute in
+   the answer.
 
    If a new DTLS association is to be established, and if the answerer
    inserts an SDP 'setup' attribute with an 'active' value in the
@@ -418,25 +414,25 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 5.4.  Offerer Processing of the SDP Answer
 
-   When an offerer receives an answer that contains an SDP 'dtls-
-   association-id' attribute with a new value, and if the offerer
-   becomes DTLS client (based on the value of the SDP 'setup' attribute
-   value [RFC4145]), the offerer MUST establish a DTLS association.  If
-   the offerer becomes DTLS server, it MUST wait for the answerer to
-   establish the DTLS association.
+   When an offerer receives an answer that contains an SDP 'dtls-id'
+   attribute with a new value, and if the offerer becomes DTLS client
+   (based on the value of the SDP 'setup' attribute value [RFC4145]),
+   the offerer MUST establish a DTLS association.  If the offerer
+   becomes DTLS server, it MUST wait for the answerer to establish the
+   DTLS association.
 
-   If the answer contains an SDP 'dtls-association-id' attribute with a
-   previously assigned value, the offerer will continue using the
-   previously established DTLS association.  It is considered an error
-   case if the answer contains a 'dtls-association-id' attribute with a
-   previously assigned value, and a DTLS association does not exist.
+   If the answer contains an SDP 'dtls-id' attribute with a previously
+   assigned value, the offerer will continue using the previously
+   established DTLS association.  It is considered an error case if the
+   answer contains a 'dtls-id' attribute with a previously assigned
+   value, and a DTLS association does not exist.
 
    An offerer needs to be able to handle error conditions that can occur
    during an offer/answer transaction, e.g. if an answer contains an SDP
-   'dtls-association-id' attribute with a previosuly assigned value even
-   if no DTLS association exists, or if the answer contains one or more
-   new fingerprint values for an existing DTLS association.  If such
-   error case occurs, the offerer SHOULD terminate the associated DTLS
+   'dtls-id' attribute with a previosuly assigned value even if no DTLS
+   association exists, or if the answer contains one or more new
+   fingerprint values for an existing DTLS association.  If such error
+   case occurs, the offerer SHOULD terminate the associated DTLS
    association (if it exists) and send a new offer in order to terminate
    each media stream using the DTLS association, by setting the
    associated port value to zero [RFC4145].
@@ -445,7 +441,10 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 8]
+
+
+
+Holmberg & Shpount      Expires November 22, 2016               [Page 8]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -454,19 +453,19 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
    When the offerer sends a subsequent offer, and if the offerer wants
    to establish a new DTLS association, the offerer MUST insert an SDP
-   'dtls-association-id' attribute with a new value in the offer.  In
-   addition, the offerer MUST insert an SDP 'setup' attribute according
-   to the procedures in [RFC4145], and one or more SDP 'fingerprint'
-   attributes according to the procedures in [RFC4572], in the offer.
+   'dtls-id' attribute with a new value in the offer.  In addition, the
+   offerer MUST insert an SDP 'setup' attribute according to the
+   procedures in [RFC4145], and one or more SDP 'fingerprint' attributes
+   according to the procedures in [RFC4572], in the offer.
 
    when the offerer sends a subsequent offer, and the offerer does not
    want to establish a new DTLS association, and if a previously
    established DTLS association exists, the offerer MUST insert an SDP
-   'dtls-association-id' attribute with a previously assigned value in
-   the offer.  In addition, the offerer MUST insert an SDP 'setup'
-   attribute with a value that does not change the previously negotiated
-   DTLS roles, and one or more SDP 'fingerprint' attributes with values
-   that do not change the previously sent fingerprints, in the offer.
+   'dtls-id' attribute with a previously assigned value in the offer.
+   In addition, the offerer MUST insert an SDP 'setup' attribute with a
+   value that does not change the previously negotiated DTLS roles, and
+   one or more SDP 'fingerprint' attributes with values that do not
+   change the previously sent fingerprints, in the offer.
 
    NOTE: When a new DTLS association is established, each endpoint needs
    to be prepared to receive data on both the new and old DTLS
@@ -501,7 +500,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016               [Page 9]
+Holmberg & Shpount      Expires November 22, 2016               [Page 9]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -537,14 +536,13 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    include the SDP offer in a response associated with the response.
    When the endpoint generates such SDP offer, if a previously
    established DTLS association exists, the offerer SHOULD insert an SDP
-   'dtls-association-id' attribute, and one or more SDP 'fingerprint'
-   attributes, with previously assigned attribute values.  If a
-   previously established DTLS association did not exists offer SHOULD
-   be generated based on the same rules as new offer Section 5.2.
-   Regardless of the previous existence of DTLS association, the SDP
-   'setup' attribute MUST be included according to rules defiend in
-   [RFC4145] and if ICE is used, ICE restart MUST be initiated as
-   defined in [RFC5763].
+   'dtls-id' attribute, and one or more SDP 'fingerprint' attributes,
+   with previously assigned attribute values.  If a previously
+   established DTLS association did not exists offer SHOULD be generated
+   based on the same rules as new offer Section 5.2.  Regardless of the
+   previous existence of DTLS association, the SDP 'setup' attribute
+   MUST be included according to rules defiend in [RFC4145] and if ICE
+   is used, ICE restart MUST be initiated as defined in [RFC5763].
 
 9.  RFC Updates
 
@@ -557,7 +555,8 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 10]
+
+Holmberg & Shpount      Expires November 22, 2016              [Page 10]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -613,7 +612,7 @@ OLD TEXT:
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 11]
+Holmberg & Shpount      Expires November 22, 2016              [Page 11]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -669,7 +668,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 12]
+Holmberg & Shpount      Expires November 22, 2016              [Page 12]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -725,7 +724,7 @@ NEW TEXT:
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 13]
+Holmberg & Shpount      Expires November 22, 2016              [Page 13]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -781,7 +780,7 @@ OLD TEXT:
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 14]
+Holmberg & Shpount      Expires November 22, 2016              [Page 14]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -837,7 +836,7 @@ NEW TEXT:
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 15]
+Holmberg & Shpount      Expires November 22, 2016              [Page 15]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -893,7 +892,7 @@ OLD TEXT:
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 16]
+Holmberg & Shpount      Expires November 22, 2016              [Page 16]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -949,7 +948,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 17]
+Holmberg & Shpount      Expires November 22, 2016              [Page 17]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -1005,7 +1004,7 @@ OLD TEXT:
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 18]
+Holmberg & Shpount      Expires November 22, 2016              [Page 18]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -1023,25 +1022,26 @@ NEW TEXT:
 
    This specification does not modify the security considerations
    associated with DTLS, or the SDP offer/answer mechanism.  In addition
-   to the introduction of the SDP 'dtls-association-id' attribute, the
-   specification simply clarifies the procedures for negotiating and
-   establishing a DTLS association.
+   to the introduction of the SDP 'dtls-id' attribute, the specification
+   simply clarifies the procedures for negotiating and establishing a
+   DTLS association.
 
 11.  IANA Considerations
 
    This document updates the "Session Description Protocol Parameters"
    registry as specified in Section 8.2.2 of [RFC4566].  Specifically,
-   it adds the SDP dtls-association-id attribute to the table for SDP
-   media level attributes.
+   it adds the SDP dtls-id attribute to the table for SDP media level
+   attributes.
 
 
-    Attribute name: dtls-association-id
-    Type of attribute: media-level
-    Subject to charset: no
-    Purpose: Indicate whether a new DTLS association is to be established/re-established.
-    Appropriate Values: see Section 4
-    Contact name: Christer Holmberg
-    Category: IDENTICAL
+       Attribute name: dtls-id
+       Type of attribute: media-level
+       Subject to charset: no
+       Purpose: Indicate whether a new DTLS association is to be
+       established/re-established.
+       Appropriate Values: see Section 4
+       Contact name: Christer Holmberg
+       Category: IDENTICAL
 
 
 12.  Acknowledgements
@@ -1054,17 +1054,22 @@ NEW TEXT:
 
    [RFC EDITOR NOTE: Please remove this section when publishing]
 
-   Changes from draft-ietf-mmusic-sdp-dtls-10
+   Changes from draft-ietf-mmusic-sdp-dtls-11
 
-   o  Modified document to use dtls-association-id instead of dtls-
-      connection
-
+   o  Attribute name changed to dtls-id
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 19]
+
+Holmberg & Shpount      Expires November 22, 2016              [Page 19]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
+
+   o  Additional text based on comments from Roman Shpount.
+
+   Changes from draft-ietf-mmusic-sdp-dtls-10
+
+   o  Modified document to use dtls-id instead of dtls-connection
 
    o  Changes are based on comments from Eric Rescorla, Justin Uberti,
       and Paul Kyzivat.
@@ -1096,8 +1101,8 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    o  Reference to RFC 7315 added.
 
    o  Clarified that offerer/answerer that has not been updated to
-      support this specification will not include the dtls-association-
-      id attribute in offers and answers.
+      support this specification will not include the dtls-id attribute
+      in offers and answers.
 
    o  Editorial corrections based on WGLC comments from Charles Eckel.
 
@@ -1109,18 +1114,18 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
    o  Editorial nits fixed based on comments from Paul Kyzivat:
 
+
+
+Holmberg & Shpount      Expires November 22, 2016              [Page 20]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
+
+
    Changes from draft-ietf-mmusic-sdp-dtls-03
 
    o  Changes based on comments from Paul Kyzivat:
 
-   o  - Modification of dtls-association-id attribute section.
-
-
-
-Holmberg & Shpount      Expires November 20, 2016              [Page 20]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
-
+   o  - Modification of dtls-id attribute section.
 
    o  - Removal of IANA considerations subsection.
 
@@ -1139,7 +1144,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
    Changes from draft-ietf-mmusic-sdp-dtls-01
 
-   o  - Annex regarding 'dtls-association-id-id' attribute removed.
+   o  - Annex regarding 'dtls-id-id' attribute removed.
 
    o  - Additional SDP offer/answer procedures, related to certificates,
       added.
@@ -1150,13 +1155,12 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
    Changes from draft-ietf-mmusic-sdp-dtls-00
 
-   o  - SDP 'connection' attribute replaced with new 'dtls-association-
-      id' attribute.
+   o  - SDP 'connection' attribute replaced with new 'dtls-id'
+      attribute.
 
    o  - IANA Considerations added.
 
-   o  - E-mail regarding 'dtls-association-id-id' attribute added as
-      Annex.
+   o  - E-mail regarding 'dtls-id-id' attribute added as Annex.
 
    Changes from draft-holmberg-mmusic-sdp-dtls-01
 
@@ -1165,18 +1169,18 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
    o  - Draft file name change (sdp-dtls -> dtls-sdp) due to collision
       with another expired draft.
 
+
+
+
+Holmberg & Shpount      Expires November 22, 2016              [Page 21]
+
+Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
+
+
    o  - Clarify that if ufrag in offer is unchanged, it must be
       unchanged in associated answer.
 
    o  - SIP Considerations section added.
-
-
-
-
-Holmberg & Shpount      Expires November 20, 2016              [Page 21]
-
-Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
-
 
    o  - Section about multiple SDP fingerprint attributes added.
 
@@ -1219,17 +1223,12 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
               DOI 10.17487/RFC4572, July 2006,
               <http://www.rfc-editor.org/info/rfc4572>.
 
-   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
-              Specifications: ABNF", STD 68, RFC 5234,
-              DOI 10.17487/RFC5234, January 2008,
-              <http://www.rfc-editor.org/info/rfc5234>.
 
 
 
 
 
-
-Holmberg & Shpount      Expires November 20, 2016              [Page 22]
+Holmberg & Shpount      Expires November 22, 2016              [Page 22]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -1273,7 +1272,7 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
               Holmberg, C., Alvestrand, H., and C. Jennings,
               "Negotiating Media Multiplexing Using the Session
               Description Protocol (SDP)", draft-ietf-mmusic-sdp-bundle-
-              negotiation-25 (work in progress), January 2016.
+              negotiation-29 (work in progress), April 2016.
 
 Authors' Addresses
 
@@ -1285,7 +1284,7 @@ Authors' Addresses
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 23]
+Holmberg & Shpount      Expires November 22, 2016              [Page 23]
 
 Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
@@ -1341,4 +1340,4 @@ Internet-DraftUsing the SDP Offer/Answer Mechanism for DTLS     May 2016
 
 
 
-Holmberg & Shpount      Expires November 20, 2016              [Page 24]
+Holmberg & Shpount      Expires November 22, 2016              [Page 24]
