@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-12.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-13.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -220,7 +220,7 @@
                 a DTLS-protected media/data.
 			</t>
             <t>
-                When an offerer needs to establish a new DTLS association, and if an unreliable transport (e.g. UDP)
+                When an offerer needs to establish a new DTLS association, and if an unordered transport (e.g. UDP)
                 is used, the offerer MUST allocate a new transport for the offer in such a way that the offerer can
                 disambiguate any packets associated with the new DTLS association from any packets associated with
                 any other DTLS association. This typically means using a local address and or port, or a set of
@@ -228,7 +228,7 @@
                 not recently used for any other DTLS association.
             </t>
             <t>
-                When an answerer needs to establish a new DTLS association, if unreliable transport is used, and if
+                When an answerer needs to establish a new DTLS association, if an unordered transport is used, and if
                 the offerer did not allocate a new transport, the answerer MUST allocate a new transport for the offer
                 in answer a way that it can disambiguate any packets associated with new DTLS association from any
                 packets associated with any other DTLS association. This typically means using a local address and
@@ -406,7 +406,7 @@
             supported for backwards compatibility reasons.
         </t>
         <t>
-            When new DTLS association is established over an unreliable transport, in order to
+            When new DTLS association is established over an unordered transport, in order to
             disambiguate any packets associated with newly established DTLS association, at least
             one of the endpoints MUST allocate a completely new set of ICE candidates which
             were not recently used for any other DTLS association. This means that answerer
@@ -919,6 +919,11 @@ NEW TEXT:
 
 	<section title="Change Log">
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-12
+            <list style="symbols">
+                <t>"unreliable" changed to "unordered"</t>
+            </list>
+        </t>
         <t>Changes from draft-ietf-mmusic-sdp-dtls-11
             <list style="symbols">
                 <t>Attribute name changed to dtls-id</t>
