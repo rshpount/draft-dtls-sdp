@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-13.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-14.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -44,7 +44,8 @@
 		    <t>
             This draft defines the SDP offer/answer procedures for negotiating and establishing
             a DTLS association. The draft also defines the criteria for when a new DTLS association
-            must be established.
+            must be established. The draft updates RFC 5763 and RFC 7345, by replacing common
+            SDP offer/answer procedures with a reference to this specification.
         </t>
         <t>
             This draft defines a new SDP media-level attribute, 'dtls-id'.
@@ -63,6 +64,9 @@
                 to ensure that the DTLS aspects are common among all usages. Having common
                 procedures is essential when multiple usages share the same
                 DTLS association <xref target="I-D.ietf-mmusic-sdp-bundle-negotiation"/>.
+                The draft updates <xref format="default" pageno="false" target="RFC5763"/>
+                and <xref format="default" pageno="false" target="RFC7345"/>, by replacing common
+                SDP offer/answer procedures with a reference to this specification.
             </t>
             <t>
                 As defined in <xref format="default" pageno="false" target="RFC5763"/>, a new DTLS association
@@ -422,8 +426,7 @@
             how to demultiplex STUN packets from DTLS packets and SRTP packets.
         </t>
         <t>
-            As defined in <xref format="default" pageno="false" target="RFC5763"/>,
-            each ICE candidate associated with a component is treated as being part of the
+            Each ICE candidate associated with a component is treated as being part of the
             same DTLS association. Therefore, from a DTLS perspective it is not considered
             a change of local transport parameters when an endpoint switches between those
             ICE candidates.
@@ -450,7 +453,7 @@
             If forking occurs, separate DTLS associations MUST be established between the caller
             and each callee.
         </t>
-		<t>
+		    <t>
             It is possible to send an INVITE request which does not contain an SDP offer. Such
             INVITE request is often referred to as an 'empty INVITE', or an 'offer-less INVITE'.
             The receiving endpoint will include the SDP offer in a response associated with the
@@ -461,8 +464,7 @@
             offer SHOULD be generated based on the same rules as new offer <xref target="sec-oa-offer"/>.
             Regardless of the previous existence of DTLS association, the SDP 'setup' attribute
             MUST be included according to rules defiend in <xref format="default" pageno="false"
-            target="RFC4145"/> and if ICE is used, ICE restart MUST be initiated as defined in
-            <xref format="default" pageno="false" target="RFC5763"/>.
+            target="RFC4145"/> and if ICE is used, ICE restart MUST be initiated.
         </t>
 	</section>
 
@@ -899,7 +901,7 @@ NEW TEXT:
     Attribute name: dtls-id
     Type of attribute: media-level
     Subject to charset: no
-    Purpose: Indicate whether a new DTLS association is to be 
+    Purpose: Indicate whether a new DTLS association is to be
     established/re-established.
     Appropriate Values: see Section 4
     Contact name: Christer Holmberg
@@ -919,6 +921,13 @@ NEW TEXT:
 
 	<section title="Change Log">
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+        <t>Changes from draft-ietf-mmusic-sdp-dtls-13
+            <list style="symbols">
+                <t>Text about the updated RFCs added to Abstract and Introduction</t>
+                <t>Reference to RFC 5763 removed from section 6 (ICE Considerations)</t>
+                <t>Reference to RFC 5763 removed from section 8 (SIP Considerations)</t>
+            </list>
+        </t>
         <t>Changes from draft-ietf-mmusic-sdp-dtls-12
             <list style="symbols">
                 <t>"unreliable" changed to "unordered"</t>
@@ -1020,9 +1029,9 @@ NEW TEXT:
 
 <back>
     <references title="Normative References">
-		<?rfc include="reference.RFC.2119"?>
+		    <?rfc include="reference.RFC.2119"?>
         <?rfc include="reference.RFC.3261"?>
-		<?rfc include="reference.RFC.3264"?>
+		    <?rfc include="reference.RFC.3264"?>
         <?rfc include="reference.RFC.4145"?>
         <?rfc include="reference.RFC.4566"?>
         <?rfc include="reference.RFC.4572"?>
@@ -1032,9 +1041,9 @@ NEW TEXT:
     </references>
     <references title="Informative References">
         <?rfc include="reference.RFC.5576"?>
-		<?rfc include="reference.RFC.6083"?>
-        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-mux-attributes-12"?>
-        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-bundle-negotiation-29"?>
+		    <?rfc include="reference.RFC.6083"?>
+        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-mux-attributes-13"?>
+        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-bundle-negotiation-31"?>
     </references>
 
 </back>
