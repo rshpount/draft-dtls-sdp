@@ -4,7 +4,7 @@
 <?rfc toc="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc sortrefs="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-14.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-mmusic-dtls-sdp-15.txt" updates="5763,7345" submissionType="IETF" xml:lang="en">
   <front>
     <title>
 		Using the SDP Offer/Answer Mechanism for DTLS
@@ -42,13 +42,13 @@
     <area>RAI</area>
     <abstract>
 		    <t>
-            This draft defines the SDP offer/answer procedures for negotiating and establishing
-            a DTLS association. The draft also defines the criteria for when a new DTLS association
-            must be established. The draft updates RFC 5763 and RFC 7345, by replacing common
+            This document defines the SDP offer/answer procedures for negotiating and establishing
+            a DTLS association. The document also defines the criteria for when a new DTLS association
+            must be established. The document updates RFC 5763 and RFC 7345, by replacing common
             SDP offer/answer procedures with a reference to this specification.
         </t>
         <t>
-            This draft defines a new SDP media-level attribute, 'dtls-id'.
+            This document defines a new SDP media-level attribute, 'dtls-id'.
         </t>
     </abstract>
 </front>
@@ -64,7 +64,7 @@
                 to ensure that the DTLS aspects are common among all usages. Having common
                 procedures is essential when multiple usages share the same
                 DTLS association <xref target="I-D.ietf-mmusic-sdp-bundle-negotiation"/>.
-                The draft updates <xref format="default" pageno="false" target="RFC5763"/>
+                The document updates <xref format="default" pageno="false" target="RFC5763"/>
                 and <xref format="default" pageno="false" target="RFC7345"/>, by replacing common
                 SDP offer/answer procedures with a reference to this specification.
             </t>
@@ -72,13 +72,13 @@
                 As defined in <xref format="default" pageno="false" target="RFC5763"/>, a new DTLS association
                 MUST be established when transport parameters are changed. Transport parameter change is not
                 well defined when Interactive Connectivity Establishment (ICE) <xref format="default"
-                pageno="false" target="RFC5245"/> is used. One possible way to determine a transport change is
+                pageno="false" target="I-D.ietf-ice-rfc5245bis"/> is used. One possible way to determine a transport change is
                 based on ufrag change, but the ufrag value is changed both when ICE is negotiated
-                and when ICE restart <xref format="default" pageno="false" target="RFC5245"/> occurs. These events
+                and when ICE restart <xref format="default" pageno="false" target="I-D.ietf-ice-rfc5245bis"/> occurs. These events
                 do not always require a new DTLS association to be established, but currently there is no way
                 to explicitly indicate in an SDP offer or answer whether a new DTLS association is required.
-                To solve that problem, this draft defines a new SDP attribute, 'dtls-id'. The 'dtls-id' attribute
-                pair  in combination with 'fingerprint' attribute values from offer and answer SDP uniquely 
+                To solve that problem, this document defines a new SDP attribute, 'dtls-id'. The 'dtls-id' attribute
+                pair  in combination with 'fingerprint' attribute values from offer and answer SDP uniquely
                 identifies the DTLS association. Providing a new value of 'dtls-id' attribute in SDP offer
                 or answers can be used to indicate whether a new DTLS association is to be established.
             </t>
@@ -127,12 +127,12 @@
         <section title="Change of Local Transport Parameters" anchor="sec-dtls-transport">
             <t>
                 If an endpoint modifies its local transport parameters (address and/or port), and if the modification
-                requires a new DTLS association, the endpoint MUST change its set of fingerprints and SDP 'dtls-id' 
+                requires a new DTLS association, the endpoint MUST change its set of fingerprints and SDP 'dtls-id'
                 attribute so that together they represent a new unique set of values <xref target="sec-dcon-attr"/>.
             </t>
             <t>
                 If the underlying transport explicitly prohibits a DTLS association to span multiple transports, and if
-                the transport is changed, the endpoint MUST change its set of fingerprints and SDP 'dtls-id' 
+                the transport is changed, the endpoint MUST change its set of fingerprints and SDP 'dtls-id'
                 attribute so that together they represent a new unique set of values <xref target="sec-dcon-attr"/>.
                 An example of such case is when DTLS is carried over SCTP, as described in
                 <xref format="default" pageno="false" target="RFC6083"/>.
@@ -141,7 +141,7 @@
         <section title="Change of ICE ufrag value" anchor="sec-dtls-ufrag">
             <t>
                 If an endpoint uses ICE, and modifies a local ufrag value, and if the modification
-                requires a new DTLS association, the endpoint MUST change its set of fingerprints and SDP 'dtls-id' 
+                requires a new DTLS association, the endpoint MUST change its set of fingerprints and SDP 'dtls-id'
                 attribute so that together they represent a new unique set of values <xref target="sec-dcon-attr"/>.
             </t>
         </section>
@@ -162,11 +162,11 @@
 
        Charset Dependent: no
 
-       Default Value: empty string
+       Default Value: empty value
 
        Syntax:
 
-           conn-value = 0*256alphanum
+           id-value = 0*256 <alpha-numeric defined in [RFC4566]>
 
        Example:
 
@@ -181,7 +181,7 @@
             association.
         </t>
         <t>
-            The default value for the SDP 'dtls-id' attribute is an empty string.
+            The default value for the SDP 'dtls-id' attribute is an empty value.
             Implementations that wish to use the attribute MUST explicitly include it
             in SDP offers and answers. If an offer or answer does not contain an
             attribute (this could happen if the offerer or answerer represents an
@@ -189,8 +189,8 @@
             defined in this specification or an implementation which allocates a new
             temporary certificate for each association and uses change in fingerprint
             to indicate new association), it should be treated as if 'dtls-id' attribute
-            with an empty string value were included in SDP and procedures defined in
-            this specification should be used to determine if new DTLS association 
+            with an empty value value were included in SDP and procedures defined in
+            this specification should be used to determine if new DTLS association
             should be established.
         </t>
         <t>
@@ -214,24 +214,24 @@
         <section title="General">
             <t>
                 This section defines the generic SDP offer/answer procedures for negotiating
-                a DTLS association. Additional procedures (e.g. regarding usage of specific SDP
-                attributes etc) for individual DTLS usages (e.g. SRTP-DTLS) are outside the scope
+                a DTLS association. Additional procedures (e.g., regarding usage of specific SDP
+                attributes etc) for individual DTLS usages (e.g., SRTP-DTLS) are outside the scope
                 of this specification, and need to be specified in a usage specific specification.
             </t>
             <t>
                 NOTE: The procedures in this section are generalizations of procedures first
                 specified in SRTP-DTLS <xref format="default" pageno="false" target="RFC5763"/>,
                 with the addition of usage of the SDP 'dtls-id' attribute. That document is
-                herein revised to make use of these new procedures.
+                herein updated to make use of these new procedures.
             </t>
             <t>
                 The procedures in this section apply to an SDP media description ("m=" line) associated
-                a DTLS-protected media/data.
-			</t>
+                with DTLS-protected media/data.
+           </t>
             <t>
-                When end point indicates that it wants to establish a new DTLS association, it needs to make sure that
+                When an offerer or answerer indicates that it wants to establish a new DTLS association, it needs to make sure that
                 media packets in the existing DTLS association and new DTLS association can be de-multiplexed. In case
-                of ordered transport, such as SCTP, this can be done simply by sending packets for new DTLS association
+                of ordered transport (e.g., SCTP) this can be done simply by sending packets for new DTLS association
                 after all packets for existing DTLS association have been sent. In case of unordered transport, such as
                 UDP, packets for the old DTLS association can arrive after the answer SDP was received and after first
                 packets for the new DTLS association were received. The only way to de-multiplex packets belonging to
@@ -240,10 +240,10 @@
                 so that DTLS packets can be de-multiplexed.
             </t>
             <t>
-                When an offerer needs to establish a new DTLS association, and if an unordered transport (e.g. UDP)
-                is used, the offerer MUST allocate a new transport  (3-tuple) for the offer in such a way that the offerer can
+                When an offerer needs to establish a new DTLS association, and if an unordered transport (e.g., UDP)
+                is used, the offerer MUST allocate a new transport (3-tuple) for the offer in such a way that the offerer can
                 disambiguate any packets associated with the new DTLS association from any packets associated with
-                any other DTLS association. This typically means using a local address and or port, or a set of
+                any other DTLS association. This typically means using a local address and/or port, or a set of
                 ICE candidates (see <xref format="default" pageno="false" target="sec-dtls-reest-ice"/>), which were
                 not recently used for any other DTLS association.
             </t>
@@ -251,11 +251,11 @@
                 When an answerer needs to establish a new DTLS association, if an unordered transport is used, and if
                 the offerer did not allocate a new transport, the answerer MUST allocate a new transport for the offer
                 in answer a way that it can disambiguate any packets associated with new DTLS association from any
-                packets associated with any other DTLS association. This typically means using a local address and
-                or port, or a set of ICE candidates (see <xref format="default" pageno="false" target="sec-dtls-reest-ice"/>),
+                packets associated with any other DTLS association. This typically means using a local address and/or
+                port, or a set of ICE candidates (see <xref format="default" pageno="false" target="sec-dtls-reest-ice"/>),
                 which were not recently used for any other DTLS association.
             </t>
-			<t>
+            <t>
                 In order to negotiate a DTLS association, the following SDP attributes are used:
                 <list style="symbols">
                     <t>
@@ -268,18 +268,18 @@
                         value; and
                     </t>
                     <t>
-                        The SDP 'dtls-id' attribute, defined in this specification, which, if fingerprints are 
+                        The SDP 'dtls-id' attribute, defined in this specification, which, if fingerprints are
                         reused, can be assigned a new value to explicitly indicate the intention to establishing
                         a new DTLS association.
                     </t>
                 </list>
-			</t>
-			<t>
-				This specification does not define the usage of the SDP 'connection' attribute
-				<xref target="RFC4145" pageno="false" format="default" /> for negotiating a DTLS
-				connection. However, the attribute MAY be used if the DTLS association is used
-				together with another protocol, e.g. SCTP or TCP, for which the usage of the
-				attribute has been defined.
+            </t>
+            <t>
+                This specification does not define the usage of the SDP 'connection' attribute
+                <xref target="RFC4145" pageno="false" format="default" /> for negotiating a DTLS
+                connection. However, the attribute MAY be used if the DTLS association is used
+                together with another protocol (e.g., SCTP or TCP) for which the usage of the
+                attribute has been defined.
             </t>
             <t>
                 Unlike for TCP and TLS connections, endpoints MUST NOT use the
@@ -291,19 +291,19 @@
             </t>
             <t>
                 Endpoints MUST, at a minimum, support TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-			    and MUST support TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256. UDPTL over DTLS MUST
-			    prefer TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and any other Perfect Forward Secrecy
-			    (PFS) cipher suites over non-PFS cipher suites. Implementations SHOULD disable
-			    TLS-level compression.
-			</t>
-			<t>
+                and MUST support TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256. UDPTL over DTLS MUST
+                prefer TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and any other Perfect Forward Secrecy
+                (PFS) cipher suites over non-PFS cipher suites. Implementations SHOULD disable
+                TLS-level compression.
+            </t>
+            <t>
                 The certificate received during the DTLS handshake MUST match at least
                 one of the certificate fingerprints received in SDP 'fingerprint' attributes.
                 If no fingerprint matches the hashed certificate, then an endpoint MUST tear
                 down the media session immediately. Note that it is permissible to wait until
                 the other side's fingerprint has been received before establishing the connection;
                 however, this may have undesirable latency effects.
-			</t>
+            </t>
             <t>
                 SDP offerers and answerers might reuse certificates across multiple DTLS
                 associations, and provide identical fingerprint values for each DTLS
@@ -319,37 +319,38 @@
 
         <section title="Generating the Initial SDP Offer" anchor="sec-oa-offer">
             <t>
-                When the offerer sends the initial offer, the offerer MUST insert an SDP 'setup' attribute
+                When an offerer sends the initial offer, the offerer MUST insert an SDP 'setup' attribute
                 according to the procedures in <xref format="default" pageno="false" target="RFC4145"/>, and
                 one or more SDP 'fingerprint' attributes according to the procedures in <xref format="default"
-                pageno="false" target="RFC4572"/>. In addition, offerer MUST insert in the offer an SDP
-                'dtls-id' attribute with a new unique value for the offer fingerprint set. If the fingerprint
-                set is not unique due the certificate reuse across multiple SDP sessions or endpoints, 'dtls-id'
-                value MUST be generated in a way that guarantees uniqueness across all current DTLS association
-                established using this fingerprint set, including DTLS association established by other SDP 
-                sessions or other endpoints. 
+                pageno="false" target="RFC4572"/> and <xref format="default" pageno="false" target="I-D.ietf-mmusic-4572-update"/>.
+                In addition, the offerer MUST insert in the offer an SDP 'dtls-id' attribute with a unique value
+                for the offer fingerprint set. If the fingerprint set is not unique due the certificate reuse across
+                multiple SDP sessions or endpoints, the 'dtls-id' attribute value MUST be generated in a way that
+                guarantees uniqueness across all current DTLS association established using this fingerprint set,
+                including DTLS association established by other SDP sessions or other endpoints.
             </t>
             <t>
-                If the offerer inserts the SDP 'setup' attribute with an 'actpass' or 'passive' value, the
+                If the offerer inserts the SDP 'setup' attribute with an 'actpass' or 'passive' attribute value, the
                 offerer MUST be prepared to receive a DTLS ClientHello message (if a new DTLS association
-                is established by the answerer) from the answerer before it receives the SDP answer.
+                is established by the answerer) from the answerer before the offerer receives the SDP answer.
             </t>
         </section>
         <section title="Generating the Answer">
             <t>
-                The answerer MUST insert in the answer an SDP 'setup' attribute according to the procedures in 
-                <xref format="default" pageno="false" target="RFC4145"/>, and one or more SDP 'fingerprint'
-                attributes according to the procedures in <xref format="default" pageno="false" target="RFC4572"/>.
-                If an answerer determines, based on the criteria for establishing a new DTLS association,
-                that a new DTLS association is to be established, the answerer MUST insert in the associated answer 
-                an SDP 'dtls-id' attribute with a new unique value for the answer fingerprint set. If the fingerprint
+                When an answerer sends an answer, the answerer MUST insert in the answer an SDP 'setup' attribute
+                according to the procedures in <xref format="default" pageno="false" target="RFC4145"/>, and one
+                or more SDP 'fingerprint' attributes according to the procedures in <xref format="default" pageno="false" target="RFC4572"/>
+                and and <xref format="default" pageno="false" target="I-D.ietf-mmusic-4572-update"/>.
+                If the answerer determines, based on the criteria for establishing a new DTLS association,
+                that a new DTLS association is to be established, the answerer MUST insert in the associated answer
+                an SDP 'dtls-id' attribute with a unique value for the answer fingerprint set. If the fingerprint
                 set is not unique due the certificate reuse across multiple SDP sessions or endpoints, 'dtls-id'
                 value MUST be generated in a way that guarantees uniqueness across all current DTLS association
-                established using this fingerprint set, including DTLS association established by other SDP 
+                established using this fingerprint set, including DTLS association established by other SDP
                 sessions or other endpoints.
             </t>
             <t>
-                If an answerer receives an offer that requires establishing a new DTLS association, and if the 
+                If the answerer receives an offer that requires establishing a new DTLS association, and if the
                 answerer does not accept the establishment of a new DTLS association, the answerer MUST reject
                 the "m=" lines associated with the suggested DTLS association
                 <xref format="default" pageno="false" target="RFC3264"/>.
@@ -357,7 +358,7 @@
             <t>
                 If an answerer receives an offer that does not require to establish a new DTLS association,
                 and if the answerer determines that a new DTLS association is not to be established,
-                the answerer MUST insert a 'dtls-id' attribute with the previously assigned value in the
+                the answerer MUST insert an SDP 'dtls-id' attribute with the previously assigned value in the
                 associated answer. In addition, the answerer MUST insert an SDP 'setup' attribute with a
                 value that does not change the previously negotiated DTLS roles, and one or more SDP 'fingerprint'
                 attributes values that do not change the previously sent fingerprints, in the answer.
@@ -375,7 +376,7 @@
         <section title="Offerer Processing of the SDP Answer">
             <t>
                 When an offerer receives an answer that establishes a new DTLS association, and if the offerer
-                becomes DTLS client (based on the value of the SDP 'setup' attribute value 
+                becomes DTLS client (based on the value of the SDP 'setup' attribute value
                 <xref format="default" pageno="false" target="RFC4145"/>), the offerer MUST
                 establish a DTLS association. If the offerer becomes DTLS server, it MUST wait for the answerer
                 to establish the DTLS association.
@@ -391,17 +392,17 @@
                 DTLS association, the offerer MUST insert an SDP 'setup' attribute
                 according to the procedures in <xref format="default" pageno="false" target="RFC4145"/>, and
                 one or more SDP 'fingerprint' attributes according to the procedures in <xref format="default"
-                pageno="false" target="RFC4572"/>. In addition, offerer MUST insert in the offer an SDP
-                'dtls-id' attribute with a new unique value for the offer fingerprint set. If the fingerprint
-                set is not unique due the certificate reuse across multiple SDP sessions or endpoints, 'dtls-id'
-                value MUST be generated in a way that guarantees uniqueness across all current DTLS association
-                established using this fingerprint set, including DTLS association established by other SDP 
-                sessions or other endpoints.
+                pageno="false" target="RFC4572"/> and <xref format="default" pageno="false" target="I-D.ietf-mmusic-4572-update"/>.
+                In addition, offerer MUST insert in the offer an SDP 'dtls-id' attribute with a new unique value
+                for the offer fingerprint set. If the fingerprint set is not unique due the certificate reuse across
+                multiple SDP sessions or endpoints, the 'dtls-id' attribute value MUST be generated in a way that
+                guarantees uniqueness across all current DTLS association established using this fingerprint set,
+                including DTLS association established by other SDP sessions or other endpoints.
              </t>
              <t>
                 When the offerer sends a subsequent offer, and the offerer does not want to establish
                 a new DTLS association, and if a previously established DTLS association exists, the
-                offerer MUST insert an SDP 'dtls-id' attribute with a previously assigned value in the offer.
+                offerer MUST insert an SDP 'dtls-id' attribute with the previously assigned value in the offer.
                 In addition, the offerer MUST insert an SDP 'setup' attribute with a value that does
                 not change the previously negotiated DTLS roles, and one or more SDP 'fingerprint' attributes with
                 values that do not change the previously sent fingerprints, in the offer.
@@ -415,7 +416,9 @@
 
     <section title="ICE Considerations" anchor="sec-dtls-reest-ice">
         <t>
-            When ICE is used, the ICE connectivity checks are performed before the DTLS
+            When the Interactive Connectivity Establishment (ICE) mechansim
+            <xref format="default" pageno="false" target="I-D.ietf-ice-rfc5245bis"/> is used, the
+            ICE connectivity checks are performed before the DTLS
             handshake begins. Note that if aggressive nomination mode is used,
             multiple candidate pairs may be marked valid before ICE finally
             converges on a single candidate pair.
@@ -426,18 +429,18 @@
         </t>
         <t>
             When new DTLS association is established over an unordered transport, in order to
-            disambiguate any packets associated with newly established DTLS association, at least
+            disambiguate any packets associated with the newly established DTLS association, at least
             one of the endpoints MUST allocate a completely new set of ICE candidates which
-            were not recently used for any other DTLS association. This means that answerer
+            were not recently used for any other DTLS association. This means the answerer
             cannot initiate a new DTLS association unless the offerer initiated ICE restart
-            <xref format="default" pageno="false" target="RFC5245"/>. If the answerer wants
+            <xref format="default" pageno="false" target="I-D.ietf-ice-rfc5245bis"/>. If the answerer wants
             to initiate a new DTLS association, it needs to initiate an ICE restart
             on its own. However, an ICE restart does not by default require a new DTLS association
             to be established.
         </t>
         <t>
             NOTE: Simple Traversal of the UDP Protocol through NAT (STUN) packets are sent directly
-            over UDP, not over DTLS. <xref format="default" pageno="false" target="RFC3261"/> describes
+            over UDP, not over DTLS. <xref format="default" pageno="false" target="RFC5764"/> describes
             how to demultiplex STUN packets from DTLS packets and SRTP packets.
         </t>
         <t>
@@ -451,7 +454,7 @@
     <section title="Transport Protocol Considerations" anchor="sec-dtls-cons-trans">
         <section title="Transport Re-Usage" anchor="sec-dtls-cons-trans-reuse">
             <t>
-                If DTLS is transported on top of a connection-oriented transport protocol (e.g. TCP or SCTP),
+                If DTLS is transported on top of a connection-oriented transport protocol (e.g., TCP or SCTP),
                 where all IP packets are acknowledged, all DTLS packets associated with a previous
                 DTLS association MUST be acknowledged (or timed out) before a new DTLS association
                 can be established on the same transport.
@@ -470,15 +473,15 @@
         </t>
 		    <t>
             It is possible to send an INVITE request which does not contain an SDP offer. Such
-            INVITE request is often referred to as an 'empty INVITE', or an 'offer-less INVITE'.
-            The receiving endpoint will include the SDP offer in a response associated with the
-            response. When the endpoint generates such SDP offer, if a previously established
+            an INVITE request is often referred to as an 'empty INVITE', or an 'offer-less INVITE'.
+            The receiving endpoint will include the SDP offer in a response to the request.
+            When the endpoint generates such SDP offer, if a previously established
             DTLS association exists, the offerer SHOULD insert an SDP 'dtls-id'
             attribute, and one or more SDP 'fingerprint' attributes, with previously assigned
-            attribute values. If a previously established DTLS association did not exists
-            offer SHOULD be generated based on the same rules as new offer <xref target="sec-oa-offer"/>.
-            Regardless of the previous existence of DTLS association, the SDP 'setup' attribute
-            MUST be included according to rules defined in <xref format="default" pageno="false"
+            attribute values. If a previously established DTLS association did not exists,
+            the offer SHOULD be generated based on the same rules as a new offer <xref target="sec-oa-offer"/>.
+            Regardless of the previous existence of a DTLS association, the SDP 'setup' attribute
+            MUST be included according to the rules defined in <xref format="default" pageno="false"
             target="RFC4145"/> and if ICE is used, ICE restart MUST be initiated.
         </t>
 	</section>
@@ -917,10 +920,10 @@ NEW TEXT:
     Type of attribute: media-level
     Subject to charset: no
     Purpose: Indicate whether a new DTLS association is to be
-    established/re-established.
+     established/re-established.
     Appropriate Values: see Section 4
     Contact name: Christer Holmberg
-    Category: IDENTICAL
+    Mux Category: IDENTICAL
 
 			]]></artwork>
 		</figure>
@@ -928,14 +931,21 @@ NEW TEXT:
 
 	<section title="Acknowledgements">
 		<t>
-            Thanks to Justin Uberti, Martin Thomson, Paul Kyzivat, Jens Guballa,
-            Charles Eckel and Gonzalo Salgueiro for providing comments and
-            suggestions on the draft.
-        </t>
+      Thanks to Justin Uberti, Martin Thomson, Paul Kyzivat, Jens Guballa,
+      Charles Eckel and Gonzalo Salgueiro for providing comments and
+      suggestions on the document.
+    </t>
 	</section>
 
 	<section title="Change Log">
 		<t>[RFC EDITOR NOTE: Please remove this section when publishing]</t>
+      <t>Changes from draft-ietf-mmusic-sdp-dtls-14
+        <list style="symbols">
+            <t>Changes based on comments from Flemming:</t>
+            <t>- Additional dtls-is clarifiations</t>
+            <t>- Editorial fixes</t>
+        </list>
+        </t>
         <t>Changes from draft-ietf-mmusic-sdp-dtls-13
             <list style="symbols">
                 <t>Text about the updated RFCs added to Abstract and Introduction</t>
@@ -1050,15 +1060,17 @@ NEW TEXT:
         <?rfc include="reference.RFC.4145"?>
         <?rfc include="reference.RFC.4566"?>
         <?rfc include="reference.RFC.4572"?>
-        <?rfc include="reference.RFC.5245"?>
         <?rfc include="reference.RFC.5763"?>
         <?rfc include="reference.RFC.7345"?>
+        <?rfc include="reference.I-D.draft-ietf-mmusic-4572-update-07"?>
     </references>
     <references title="Informative References">
         <?rfc include="reference.RFC.5576"?>
+        <?rfc include="reference.RFC.5764"?>
 		    <?rfc include="reference.RFC.6083"?>
-        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-mux-attributes-13"?>
-        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-bundle-negotiation-31"?>
+        <?rfc include="reference.I-D.draft-ietf-ice-rfc5245bis-04"?>
+        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-mux-attributes-14"?>
+        <?rfc include="reference.I-D.draft-ietf-mmusic-sdp-bundle-negotiation-35"?>
     </references>
 
 </back>
