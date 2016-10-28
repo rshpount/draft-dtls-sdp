@@ -95,30 +95,39 @@
     <section title="Establishing a new DTLS Association">
         <section title="General" anchor="sec-dtls-gen">
             <t>
-                A new DTLS association MUST be established in the following cases:
+                A new DTLS association MUST be established after an offer/answer transaction if:
                 <list style="symbols">
 					    <t>
-                            The DTLS roles change;
+                            DTLS setup roles negotiated as the result of the offer/answer transaction
+                            are not 'holdconn';
+					    </t>
+					    <t>
+                            As the result of the offer/answer transaction, negotiated DTLS setup roles changed;
 					    </t>
                         <t>
                             One or more fingerprint values are modified, added
-                            or removed; or
+                            or removed in either offer or answer SDP; or
                         </t>
                         <t>
                             The intent to establish a new DTLS association is
-                            explicitly signaled;
+                            explicitly signaled by changing the value of newly defined 'dtls-id' SDP attribute;
                         </t>
                 </list>
             </t>
             <t>
-                NOTE: The first two items list above are based on the procedures
+                NOTE: The first three items list above are based on the procedures
                 in <xref format="default" pageno="false" target="RFC5763"/>.
-                This specification adds the support for explicit signaling.
+                This specification adds the support for explicit signaling via 'dtls-id' SDP attribute.
             </t>
             <t>
-                Whenever an entity determines, based on the criteria above, that a new DTLS association
-                is required, the entity MUST initiate an associated SDP offer/answer transaction, following the
-                procedures in <xref target="sec-oa"/>.
+                A new DTLS association can only established as a result of the successful SDP offer/answer transaction.
+                Whenever an entity determines that a new DTLS association is required, the entity MUST initiate an 
+                SDP offer/answer transaction, following the procedures in <xref target="sec-oa"/>.
+            </t>
+            <t>
+                Including SDP 'setup' attribute with the value 'holdconn' in either offer or answer prevents new DTLS
+                association from being established. If 'holdconn' setup role is negotiated, new DTLS association MUST
+                not be established and existing DTLS association MUST continue to be used.
             </t>
             <t>
                 The sections below describe typical cases where a new DTLS association needs to be established.
@@ -156,7 +165,7 @@
 
        Name: dtls-id
 
-       Value: conn-value
+       Value: dtls-id-value
 
        Usage Level: media
 
@@ -166,7 +175,7 @@
 
        Syntax:
 
-           id-value = 0*256 <alpha-numeric defined in [RFC4566]>
+           dtls-id-value = 0*256 <alpha-numeric defined in [RFC4566]>
 
        Example:
 
@@ -265,7 +274,7 @@
                     <t>
                         The SDP 'fingerprint' attribute, defined in <xref target="RFC4572"
                         pageno="false" format="default" />, is used to provide a fingerprint
-                        value; and
+                        values; and
                     </t>
                     <t>
                         The SDP 'dtls-id' attribute, defined in this specification, which, if fingerprints are
@@ -282,10 +291,6 @@
                 attribute has been defined.
             </t>
             <t>
-                Unlike for TCP and TLS connections, endpoints MUST NOT use the
-                SDP 'setup' attribute 'holdconn' value when negotiating a DTLS association.
-            </t>
-            <t>
                 Endpoints MUST support SHA-256 for generating and verifying any fingerprint
                 value associated with the DTLS association. The use of SHA-256 is preferred.
             </t>
@@ -297,9 +302,10 @@
                 TLS-level compression.
             </t>
             <t>
-                The certificate received during the DTLS handshake MUST match at least
-                one of the certificate fingerprints received in SDP 'fingerprint' attributes.
-                If no fingerprint matches the hashed certificate, then an endpoint MUST tear
+                The certificate received during the DTLS handshake MUST match the certificate
+                fingerprints received in SDP 'fingerprint' attributes according to procedures
+                defined in <xref format="default" pageno="false" target="I-D.ietf-mmusic-4572-update"/>.
+                If fingerprints do not match the hashed certificate, then an endpoint MUST tear
                 down the media session immediately. Note that it is permissible to wait until
                 the other side's fingerprint has been received before establishing the connection;
                 however, this may have undesirable latency effects.
@@ -334,14 +340,18 @@
                 offerer MUST be prepared to receive a DTLS ClientHello message (if a new DTLS association
                 is established by the answerer) from the answerer before the offerer receives the SDP answer.
             </t>
+            <t>
+                The offerer must not insert the SDP 'setup' attribute with the 'holdconn' attribute value in the
+                initial offer since this will prevent DTLS association from being established.
+            </t>
         </section>
         <section title="Generating the Answer">
             <t>
                 When an answerer sends an answer, the answerer MUST insert in the answer an SDP 'setup' attribute
                 according to the procedures in <xref format="default" pageno="false" target="RFC4145"/>, and one
                 or more SDP 'fingerprint' attributes according to the procedures in <xref format="default" pageno="false" target="RFC4572"/>
-                and and <xref format="default" pageno="false" target="I-D.ietf-mmusic-4572-update"/>.
-                If the answerer determines, based on the criteria for establishing a new DTLS association,
+                and <xref format="default" pageno="false" target="I-D.ietf-mmusic-4572-update"/>.
+                If the answerer determines, based on the criteria specified in <xref target="sec-dtls-gen"/>,
                 that a new DTLS association is to be established, the answerer MUST insert in the associated answer
                 an SDP 'dtls-id' attribute with a unique value for the answer fingerprint set. If the fingerprint
                 set is not unique due the certificate reuse across multiple SDP sessions or endpoints, 'dtls-id'
@@ -350,10 +360,17 @@
                 sessions or other endpoints.
             </t>
             <t>
-                If the answerer receives an offer that requires establishing a new DTLS association, and if the
-                answerer does not accept the establishment of a new DTLS association, the answerer MUST reject
-                the "m=" lines associated with the suggested DTLS association
-                <xref format="default" pageno="false" target="RFC3264"/>.
+                If the answerer receives an offer that requires establishing a new DTLS association, no previous
+                DTLS association exists, and if the answerer does not accept the establishment of a new DTLS
+                association, the answerer MUST reject the "m=" lines associated with the suggested
+                DTLS association <xref format="default" pageno="false" target="RFC3264"/>.
+            </t>
+            <t>
+                If the answerer receives an offer that requires establishing a new DTLS association, a
+                previous DTLS association exists, and if answerer does not accept the establishment of a 
+                new DTLS association and decides to continue using a previous DTLS association,
+                the answerer MUST reject establishing a new DTLS association by setting the SDP
+                'setup' attribute value to 'holdconn'.
             </t>
             <t>
                 If an answerer receives an offer that does not require to establish a new DTLS association,
@@ -372,10 +389,16 @@
                 attribute with an 'active' value in the answer, the answerer MUST initiate a DTLS handshake by
                 sending a DTLS ClientHello message towards the offerer.
             </t>
+            <t>
+                If the answerer receives an offer that contains SDP 'setup' attribute with the value 'holdconn' 
+                and no previous DTLS association exists the answerer MUST reject the "m=" lines associated with
+                the suggested DTLS association <xref format="default" pageno="false" target="RFC3264"/>.
+            </t>
         </section>
         <section title="Offerer Processing of the SDP Answer">
             <t>
-                When an offerer receives an answer that establishes a new DTLS association, and if the offerer
+                When an offerer receives an answer that either establishes a new DTLS association based on
+                criteria defined in <xref target="sec-dtls-gen"/>, and if the offerer
                 becomes DTLS client (based on the value of the SDP 'setup' attribute value
                 <xref format="default" pageno="false" target="RFC4145"/>), the offerer MUST
                 establish a DTLS association. If the offerer becomes DTLS server, it MUST wait for the answerer
@@ -384,6 +407,19 @@
             <t>
                 If the answer does not establish a new DTLS association, the offerer will continue using the
                 previously established DTLS association.
+            </t>
+            <t>
+                NOTE: New DTLS association can be established based on changes in either offer or answer SDP.
+                When communicating with legacy end points, offerer can receive the answer that uses the same
+                fingerprint values and negotiate the same setup roles. The new DTLS association MUST still be
+                established if such an answer was received as a response to an offer which requested to establish
+                a new DTLS association.
+            </t>
+            <t>
+                NOTE: If the setup role negotiated as a result of the offer/answer transaction is 'holdconn', new
+                DTLS association MUST never be established even if other criteria for setting up a new DTLS association,
+                such as fingerprint value change, are satisfied, and previously established DTLS association MUST continue
+                to be used.
             </t>
         </section>
         <section title="Modifying the Session">
@@ -406,6 +442,12 @@
                 In addition, the offerer MUST insert an SDP 'setup' attribute with a value that does
                 not change the previously negotiated DTLS roles, and one or more SDP 'fingerprint' attributes with
                 values that do not change the previously sent fingerprints, in the offer.
+            </t>
+             <t>
+                Furthermore, when the offerer sends a subsequent offer, and the offerer does not want to establish
+                a new DTLS association, if a previously established DTLS association exists, and if the offerer wants
+                to prevent the answerer from establishing a new DTLS association, the offerer MUST insert an SDP 'setup'
+                attribute with the value 'holdconn' in the offer.
             </t>
             <t>
                 NOTE: When a new DTLS association is being established, each endpoint needs to be prepared to receive
@@ -433,8 +475,10 @@
             one of the endpoints MUST allocate a completely new set of ICE candidates which
             were not recently used for any other DTLS association. This means the answerer
             cannot initiate a new DTLS association unless the offerer initiated ICE restart
-            <xref format="default" pageno="false" target="I-D.ietf-ice-rfc5245bis"/>. If the answerer wants
-            to initiate a new DTLS association, it needs to initiate an ICE restart
+            <xref format="default" pageno="false" target="I-D.ietf-ice-rfc5245bis"/>. If offerer
+            did not initiate ICE restart, it MUST insert SDP 'setup' attribute with the value
+            'holdconn'. This will indicate to the answerer, that if it wants to initiate a new 
+            DTLS association, it needs to initiate an ICE restart and a new offer/answer exchange
             on its own. However, an ICE restart does not by default require a new DTLS association
             to be established.
         </t>
@@ -481,8 +525,7 @@
             attribute values. If a previously established DTLS association did not exists,
             the offer SHOULD be generated based on the same rules as a new offer <xref target="sec-oa-offer"/>.
             Regardless of the previous existence of a DTLS association, the SDP 'setup' attribute
-            MUST be included according to the rules defined in <xref format="default" pageno="false"
-            target="RFC4145"/> and if ICE is used, ICE restart MUST be initiated.
+            MUST be included with the value 'actpass' and if ICE is used, ICE restart MUST be initiated.
         </t>
 	</section>
 
@@ -732,12 +775,6 @@ NEW TEXT:
    The Interactive Connectivity Establishment (ICE) [RFC5245]
    considerations for DTLS-protected media are described in
    [RFCXXXX].
-
-   Note that Simple Traversal of the UDP Protocol through NAT (STUN)
-   packets are sent directly over UDP, not over DTLS.  [RFC5764]
-   describes how to demultiplex STUN packets from DTLS packets and SRTP
-   packets.
-
                 ]]></artwork>
             </figure>
         </section>
